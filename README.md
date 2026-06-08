@@ -30,6 +30,7 @@
 | [data/sample_passages.md](data/sample_passages.md) | 실습용 지문 3편 (원문→빈칸→Word Bank→타겟어휘) |
 | [demos/01_flashcard.html](demos/01_flashcard.html) | **동작 예제** — 플래시카드+퀴즈+간격반복 (더블클릭 실행) |
 | [demos/02_passage_vocab.html](demos/02_passage_vocab.html) | **동작 예제** — 지문→빈칸·문맥추론·복습 (더블클릭 실행) |
+| [slides/teacher_training.html](slides/teacher_training.html) | **연수용 슬라이드** 15장 (←→ 이동, F 전체화면, 더블클릭 실행) |
 
 > 두 데모 모두 `<script>` 안의 `여기만 바꾸면` 구역만 교체하면 새 단어장/지문으로 즉시 동작합니다.
 > 자세한 사용·배포는 [demos/README.md](demos/README.md) 참고.
