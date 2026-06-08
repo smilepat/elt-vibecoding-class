@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어휘 플래시카드 (워크숍 예제 앱)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; padding: 20px; color: #333;
+  }
+  h1 { color: #fff; margin-bottom: 6px; font-size: 1.5rem; text-align: center; }
+  .sub { color: #e9e4ff; font-size: 0.85rem; margin-bottom: 18px; text-align: center; }
+
+  /* 모드 탭 */
+  .tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+  .tab {
+    padding: 9px 18px; border: none; border-radius: 999px; cursor: pointer;
+    background: rgba(255,255,255,0.25); color: #fff; font-size: 0.9rem; font-weight: 600;
+  }
+  .tab.active { background: #fff; color: #764ba2; }
+
+  .card-wrap { width: 100%; max-width: 440px; }
+
+  /* 플래시카드 */
+  .scene { perspective: 1000px; width: 100%; height: 260px; margin-bottom: 16px; }
+  .card {
+    width: 100%; height: 100%; position: relative; cursor: pointer;
+    transform-style: preserve-3d; transition: transform 0.5s;
+  }
+  .card.flipped { transform: rotateY(180deg); }
+  .face {
+    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+    background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px; text-align: center;
+  }
+  .front .word { font-size: 2.4rem; font-weight: 700; color: #764ba2; }
+  .front .pos { margin-top: 8px; color: #999; font-style: italic; }
+  .back { transform: rotateY(180deg); }
+  .back .mean { font-size: 1.7rem; font-weight: 700; margin-bottom: 14px; }
+  .back .ex { font-size: 0.95rem; color: #555; line-height: 1.5; }
+  .back .exk { font-size: 0.85rem; color: #999; margin-top: 6px; }
+  .tip { color: #bbb; font-size: 0.8rem; margin-top: 14px; }
+
+  /* 컨트롤 */
+  .controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .btn {
+    flex: 1; padding: 12px; border: none; border-radius: 12px; cursor: pointer;
+    background: #fff; color: #764ba2; font-size: 1rem; font-weight: 600;
+  }
+  .btn:active { transform: scale(0.97); }
+  .counter { color: #fff; font-weight: 600; min-width: 64px; text-align: center; }
+
+  /* 간격반복 버튼 */
+  .srbtns { display: flex; gap: 10px; margin-top: 12px; }
+  .know { background: #4ade80; color: #064e2b; }
+  .dontknow { background: #f87171; color: #5b1212; }
+
+  /* 퀴즈 */
+  .quiz { background: #fff; border-radius: 20px; padding: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+  .qword { font-size: 2rem; font-weight: 700; color: #764ba2; text-align: center; margin-bottom: 4px; }
+  .qpos { text-align: center; color: #999; font-style: italic; margin-bottom: 20px; }
+  .opt {
+    display: block; width: 100%; padding: 14px; margin-bottom: 10px; border: 2px solid #eee;
+    border-radius: 12px; background: #fafafa; cursor: pointer; font-size: 1rem; text-align: left;
+  }
+  .opt:hover { border-color: #764ba2; }
+  .opt.correct { background: #dcfce7; border-color: #4ade80; }
+  .opt.wrong { background: #fee2e2; border-color: #f87171; }
+  .qprogress { text-align: center; color: #999; margin-top: 8px; font-size: 0.9rem; }
+  .result { text-align: center; padding: 20px; }
+  .result .score { font-size: 3rem; font-weight: 800; color: #764ba2; }
+
+  /* 진도 바 */
+  .progress-bar { width: 100%; max-width: 440px; height: 8px; background: rgba(255,255,255,0.3);
+    border-radius: 999px; margin-top: 16px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #4ade80; width: 0%; transition: width 0.3s; }
+  .stats { color: #fff; font-size: 0.85rem; margin-top: 8px; text-align: center; }
+</style>
+</head>
+<body>
+  <h1>📚 어휘 플래시카드</h1>
+  <div class="sub">워크숍 예제 앱 — 플립 · 퀴즈 · 간격반복 복습 (데이터 교체 가능)</div>
+
+  <div class="tabs">
+    <button class="tab active" data-mode="card">카드</button>
+    <button class="tab" data-mode="quiz">퀴즈</button>
+  </div>
+
+  <div class="card-wrap">
+    <!-- 카드 모드 -->
+    <div id="cardMode">
+      <div class="scene"><div class="card" id="card">
+        <div class="face front"><div class="word" id="word"></div><div class="pos" id="pos"></div><div class="tip">카드를 클릭하면 뜻이 보여요</div></div>
+        <div class="face back"><div class="mean" id="mean"></div><div class="ex" id="ex"></div><div class="exk" id="exk"></div></div>
+      </div></div>
+      <div class="controls">
+        <button class="btn" id="prev">◀ 이전</button>
+        <span class="counter" id="counter"></span>
+        <button class="btn" id="next">다음 ▶</button>
+      </div>
+      <div class="srbtns">
+        <button class="btn dontknow" id="dontknow">😵 모른다</button>
+        <button class="btn know" id="know">😎 안다</button>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+      <div class="stats" id="stats"></div>
+    </div>
+
+    <!-- 퀴즈 모드 -->
+    <div id="quizMode" style="display:none;">
+      <div class="quiz" id="quizBox"></div>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   ⬇⬇⬇  여기만 바꾸면 새 단어장으로 동작합니다  ⬇⬇⬇
+   (data/sample_vocab_40.csv 의 일부를 가져온 예시)
+   word=단어, pos=품사, mean=뜻, ex=영어예문, exk=예문뜻
+========================================================= */
+const VOCAB = [
+  {word:"achieve", pos:"v", mean:"성취하다", ex:"She worked hard to achieve her goals.", exk:"그녀는 목표를 성취하기 위해 열심히 일했다."},
+  {word:"analyze", pos:"v", mean:"분석하다", ex:"Scientists analyze data to find patterns.", exk:"과학자들은 패턴을 찾기 위해 데이터를 분석한다."},
+  {word:"benefit", pos:"n", mean:"이익; 혜택", ex:"Exercise has many health benefits.", exk:"운동은 많은 건강상의 이익이 있다."},
+  {word:"challenge", pos:"n", mean:"도전; 난제", ex:"Climate change is a global challenge.", exk:"기후 변화는 전 지구적 난제이다."},
+  {word:"consider", pos:"v", mean:"고려하다", ex:"Please consider all the options carefully.", exk:"모든 선택지를 신중히 고려해 주세요."},
+  {word:"demonstrate", pos:"v", mean:"입증하다; 보여주다", ex:"The study demonstrates a clear link.", exk:"그 연구는 명확한 연관성을 입증한다."},
+  {word:"emphasize", pos:"v", mean:"강조하다", ex:"The teacher emphasized the main idea.", exk:"선생님은 핵심 내용을 강조했다."},
+  {word:"encourage", pos:"v", mean:"격려하다; 장려하다", ex:"Good feedback encourages students to learn.", exk:"좋은 피드백은 학생들이 배우도록 격려한다."},
+  {word:"identify", pos:"v", mean:"식별하다; 알아보다", ex:"Can you identify the main problem?", exk:"주요 문제를 알아볼 수 있나요?"},
+  {word:"impact", pos:"n", mean:"영향", ex:"Technology has a big impact on our lives.", exk:"기술은 우리 삶에 큰 영향을 미친다."},
+  {word:"improve", pos:"v", mean:"향상시키다", ex:"Reading every day improves your vocabulary.", exk:"매일 읽는 것은 어휘력을 향상시킨다."},
+  {word:"maintain", pos:"v", mean:"유지하다", ex:"It is important to maintain a healthy diet.", exk:"건강한 식단을 유지하는 것이 중요하다."},
+  {word:"predict", pos:"v", mean:"예측하다", ex:"Scientists predict the weather using data.", exk:"과학자들은 데이터로 날씨를 예측한다."},
+  {word:"preserve", pos:"v", mean:"보존하다", ex:"We must preserve our natural environment.", exk:"우리는 자연환경을 보존해야 한다."},
+  {word:"reduce", pos:"v", mean:"줄이다", ex:"We should reduce plastic waste.", exk:"우리는 플라스틱 쓰레기를 줄여야 한다."},
+  {word:"significant", pos:"adj", mean:"중요한; 상당한", ex:"There was a significant change in scores.", exk:"점수에 상당한 변화가 있었다."},
+  {word:"solve", pos:"v", mean:"해결하다", ex:"Teamwork helps us solve big problems.", exk:"팀워크는 우리가 큰 문제를 해결하도록 돕는다."},
+  {word:"specific", pos:"adj", mean:"구체적인; 특정한", ex:"Give a specific example to explain.", exk:"설명하기 위해 구체적인 예를 드세요."}
+];
+const STORAGE_KEY = "flashcard_progress_v1";
+/* =========================================================
+   ⬆⬆⬆  여기까지가 바꾸면 되는 부분  ⬆⬆⬆
+========================================================= */
+
+// ---- 상태 ----
+let idx = 0;
+let known = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); // {word: true/false}
+
+// ---- 카드 렌더 ----
+const card = document.getElementById("card");
+function renderCard() {
+  const v = VOCAB[idx];
+  document.getElementById("word").textContent = v.word;
+  document.getElementById("pos").textContent = v.pos;
+  document.getElementById("mean").textContent = v.mean;
+  document.getElementById("ex").textContent = v.ex;
+  document.getElementById("exk").textContent = v.exk;
+  document.getElementById("counter").textContent = (idx+1) + " / " + VOCAB.length;
+  card.classList.remove("flipped");
+  renderStats();
+}
+function renderStats() {
+  const knownCount = VOCAB.filter(v => known[v.word]).length;
+  const pct = Math.round(knownCount / VOCAB.length * 100);
+  document.getElementById("fill").style.width = pct + "%";
+  document.getElementById("stats").textContent =
+    "외운 단어 " + knownCount + " / " + VOCAB.length + " (" + pct + "%)";
+}
+card.addEventListener("click", () => card.classList.toggle("flipped"));
+document.getElementById("next").onclick = () => { idx = (idx+1) % VOCAB.length; renderCard(); };
+document.getElementById("prev").onclick = () => { idx = (idx-1+VOCAB.length) % VOCAB.length; renderCard(); };
+
+function mark(isKnown) {
+  known[VOCAB[idx].word] = isKnown;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(known));
+  // '모른다'는 그 자리에, '안다'는 다음으로 — 모르는 단어를 더 자주 만나게
+  if (isKnown) { idx = nextUnknown(); }
+  renderCard();
+}
+function nextUnknown() {
+  for (let step = 1; step <= VOCAB.length; step++) {
+    const j = (idx + step) % VOCAB.length;
+    if (!known[VOCAB[j].word]) return j;
+  }
+  return (idx+1) % VOCAB.length; // 다 외웠으면 그냥 다음
+}
+document.getElementById("know").onclick = () => mark(true);
+document.getElementById("dontknow").onclick = () => mark(false);
+
+// ---- 모드 전환 ----
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  t.classList.add("active");
+  const mode = t.dataset.mode;
+  document.getElementById("cardMode").style.display = mode === "card" ? "block" : "none";
+  document.getElementById("quizMode").style.display = mode === "quiz" ? "block" : "none";
+  if (mode === "quiz") startQuiz();
+});
+
+// ---- 퀴즈 ----
+let quizOrder = [], quizPos = 0, quizScore = 0;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=(i*7+3)%(i+1); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function startQuiz() {
+  quizOrder = shuffle(VOCAB.map((_,i)=>i)).slice(0, Math.min(10, VOCAB.length));
+  quizPos = 0; quizScore = 0;
+  renderQuiz();
+}
+function renderQuiz() {
+  const box = document.getElementById("quizBox");
+  if (quizPos >= quizOrder.length) {
+    box.innerHTML = '<div class="result"><div>퀴즈 완료! 🎉</div>' +
+      '<div class="score">' + quizScore + ' / ' + quizOrder.length + '</div>' +
+      '<button class="btn" style="background:#764ba2;color:#fff;margin-top:12px;" onclick="startQuiz()">다시 풀기</button></div>';
+    return;
+  }
+  const v = VOCAB[quizOrder[quizPos]];
+  // 보기: 정답 + 다른 단어 뜻 3개
+  const others = shuffle(VOCAB.filter(x => x.word !== v.word)).slice(0,3).map(x => x.mean);
+  const opts = shuffle([v.mean, ...others]);
+  box.innerHTML =
+    '<div class="qword">' + v.word + '</div><div class="qpos">' + v.pos + '</div>' +
+    opts.map(o => '<button class="opt">' + o + '</button>').join('') +
+    '<div class="qprogress">' + (quizPos+1) + ' / ' + quizOrder.length + ' · 점수 ' + quizScore + '</div>';
+  box.querySelectorAll(".opt").forEach(btn => btn.onclick = () => {
+    if (btn.dataset.done) return;
+    const correct = btn.textContent === v.mean;
+    box.querySelectorAll(".opt").forEach(b => {
+      b.dataset.done = "1";
+      if (b.textContent === v.mean) b.classList.add("correct");
+      else if (b === btn) b.classList.add("wrong");
+    });
+    if (correct) quizScore++;
+    setTimeout(() => { quizPos++; renderQuiz(); }, 900);
+  });
+}
+
+// 시작
+renderCard();
+</script>
+</body>
+</html>

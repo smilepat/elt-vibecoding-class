@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>지문 기반 어휘 학습 (강의 예제 앱)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+    background: #f4f5fb; min-height: 100vh; padding: 20px; color: #2d2d3a;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  h1 { font-size: 1.4rem; color: #4338ca; text-align: center; }
+  .sub { color: #888; font-size: 0.85rem; margin: 6px 0 16px; text-align: center; }
+  .panel { width: 100%; max-width: 620px; background: #fff; border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(67,56,202,0.1); padding: 22px; margin-bottom: 16px; }
+
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  select, .toggle, .tab {
+    padding: 9px 14px; border-radius: 10px; border: 1px solid #ddd; background: #fff;
+    font-size: 0.9rem; cursor: pointer; font-family: inherit;
+  }
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab { font-weight: 600; color: #555; }
+  .tab.active { background: #4338ca; color: #fff; border-color: #4338ca; }
+
+  /* 지문 본문 */
+  .passage { font-size: 1.08rem; line-height: 2.1; margin-top: 6px; }
+  .target { color: #4338ca; font-weight: 700; border-bottom: 2px solid #c7d2fe; }
+  .blank-select { font-size: 1rem; padding: 3px 6px; border: 2px solid #c7d2fe;
+    border-radius: 8px; color: #4338ca; font-weight: 600; background: #eef2ff; margin: 0 2px; }
+  .blank-select.correct { background: #dcfce7; border-color: #4ade80; color: #065f46; }
+  .blank-select.wrong { background: #fee2e2; border-color: #f87171; color: #991b1b; }
+  .hint-btn { font-size: 0.7rem; padding: 1px 6px; margin-left: 2px; border: none;
+    border-radius: 6px; background: #fde68a; cursor: pointer; vertical-align: middle; }
+
+  .bar { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  .btn { padding: 11px 18px; border: none; border-radius: 10px; cursor: pointer;
+    font-size: 0.95rem; font-weight: 600; }
+  .btn-primary { background: #4338ca; color: #fff; }
+  .btn-ghost { background: #eef2ff; color: #4338ca; }
+  .result-msg { margin-top: 14px; font-weight: 700; font-size: 1.05rem; }
+
+  .wordbank { margin-top: 14px; padding: 12px; background: #f8f8ff; border-radius: 10px;
+    font-size: 0.9rem; }
+  .wordbank b { color: #4338ca; }
+  .chip { display: inline-block; background: #eef2ff; color: #4338ca; padding: 3px 10px;
+    border-radius: 999px; margin: 3px; font-weight: 600; }
+
+  /* 문맥추론 */
+  .ctx-sentence { font-size: 1.1rem; line-height: 1.9; margin-bottom: 16px; }
+  .ctx-blank { display:inline-block; min-width: 70px; border-bottom: 2px solid #4338ca; text-align:center; color:#4338ca; font-weight:700;}
+  .opt { display:block; width:100%; text-align:left; padding: 12px; margin-bottom: 8px;
+    border: 2px solid #eee; border-radius: 10px; background:#fafafa; cursor:pointer; font-size: 0.95rem; }
+  .opt:hover { border-color:#4338ca; }
+  .opt.correct { background:#dcfce7; border-color:#4ade80; }
+  .opt.wrong { background:#fee2e2; border-color:#f87171; }
+  .reveal { margin-top: 10px; color:#555; font-size:0.95rem; }
+  .ctx-progress { color:#999; font-size:0.85rem; margin-top:6px; }
+
+  /* 플래시카드 복습 */
+  .fc { text-align:center; padding: 20px 10px; }
+  .fc .w { font-size: 2rem; font-weight:700; color:#4338ca; }
+  .fc .s { color:#666; margin-top:12px; font-size:0.98rem; line-height:1.6; }
+  .fc .m { font-size:1.4rem; font-weight:700; margin-top:14px; color:#065f46; display:none; }
+  .fc.show .m { display:block; }
+</style>
+</head>
+<body>
+  <h1>📖 지문 기반 어휘 학습</h1>
+  <div class="sub">강의 예제 앱 — 수업 지문을 붙여넣으면 어휘 학습이 됩니다 (원문·빈칸·문맥추론·복습)</div>
+
+  <div class="panel">
+    <div class="row">
+      <label style="font-size:0.85rem;color:#888;">지문 선택&nbsp;</label>
+      <select id="passageSel"></select>
+    </div>
+    <div class="tabs" style="margin-top:14px;">
+      <button class="tab active" data-mode="fill">원문 · 빈칸</button>
+      <button class="tab" data-mode="context">문맥추론</button>
+      <button class="tab" data-mode="review">복습카드</button>
+    </div>
+    <div id="content"></div>
+  </div>
+
+<script>
+/* =========================================================
+   ⬇⬇⬇  여기만 바꾸면 새 지문으로 동작합니다  ⬇⬇⬇
+   - text 안에서 **별표 두 개**로 감싼 단어가 '타겟(빈칸)'이 됩니다.
+   - targets 에 그 단어의 한국어 뜻을 적어주세요.
+========================================================= */
+const PASSAGES = [
+  {
+    title: "Global Teamwork (초급)",
+    text: "Many people around the world **work** together to solve big problems. They **look** for new ideas and solutions every day. When scientists **find** something new, they **tell** others about it. This helps everyone learn faster. If you have a question, you should **ask** an expert.",
+    targets: { work:"일하다, 협력하다", look:"찾다", find:"발견하다", tell:"말하다, 알리다", ask:"묻다, 요청하다" }
+  },
+  {
+    title: "Reading Habits (중급)",
+    text: "Reading every day can greatly **improve** your vocabulary. When you read, you **identify** new words in context, which helps you remember them longer. Many studies **demonstrate** that students who read often **achieve** higher scores. Reading also has a positive **impact** on writing skills. To build a strong habit, you should **maintain** a regular reading schedule.",
+    targets: { improve:"향상시키다", identify:"식별하다, 알아보다", demonstrate:"입증하다, 보여주다", achieve:"성취하다", impact:"영향", maintain:"유지하다" }
+  },
+  {
+    title: "Protecting Our Environment (중상급)",
+    text: "We must **preserve** our natural environment for future generations. Human activities **generate** large amounts of waste every day. Scientists **predict** that pollution will increase unless we act now. One important **factor** is how we use energy. We should **reduce** our use of plastic and **promote** clean energy sources. Small changes can make a **significant** difference.",
+    targets: { preserve:"보존하다", generate:"발생시키다, 만들어내다", predict:"예측하다", factor:"요인", reduce:"줄이다", promote:"촉진하다, 홍보하다", significant:"중요한, 상당한" }
+  }
+];
+/* =========================================================
+   ⬆⬆⬆  여기까지가 바꾸면 되는 부분  ⬆⬆⬆
+========================================================= */
+
+let cur = 0;       // 현재 지문 index
+let mode = "fill"; // fill | context | review
+
+// 지문 텍스트를 토큰으로 파싱 (**단어** → 빈칸)
+function parse(text) {
+  const tokens = []; let last = 0; const re = /\*\*(.+?)\*\*/g; let m, bi = 0;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) tokens.push({type:"text", v:text.slice(last, m.index)});
+    tokens.push({type:"blank", answer:m[1], idx:bi++});
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) tokens.push({type:"text", v:text.slice(last)});
+  return tokens;
+}
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=(i*7+5)%(i+1);[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+// 지문 선택 드롭다운
+const sel = document.getElementById("passageSel");
+PASSAGES.forEach((p,i) => { const o=document.createElement("option"); o.value=i; o.textContent=p.title; sel.appendChild(o); });
+sel.onchange = () => { cur = +sel.value; render(); };
+
+// 탭
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active"); mode = t.dataset.mode; render();
+});
+
+const content = document.getElementById("content");
+
+function render() {
+  if (mode === "fill") renderFill();
+  else if (mode === "context") renderContext();
+  else renderReview();
+}
+
+// ---------- 모드 1: 원문 · 빈칸 ----------
+let showOriginal = false;
+function renderFill() {
+  const p = PASSAGES[cur];
+  const tokens = parse(p.text);
+  const bank = shuffle(Object.keys(p.targets));
+  let html = '<div class="bar"><button class="btn ' + (showOriginal?'btn-primary':'btn-ghost') + '" id="toggleBtn">' +
+             (showOriginal ? '✅ 원문 보기 중 (클릭→빈칸)' : '👀 원문 먼저 보기') + '</button></div>';
+  html += '<div class="passage">';
+  tokens.forEach(t => {
+    if (t.type === "text") { html += t.v.replace(/\n/g,"<br>"); return; }
+    if (showOriginal) {
+      html += '<span class="target">' + t.answer + '</span>';
+    } else {
+      const opts = '<option value=""></option>' + bank.map(w => '<option value="'+w+'">'+w+'</option>').join('');
+      html += '<select class="blank-select" data-answer="'+t.answer.toLowerCase()+'" data-idx="'+t.idx+'">'+opts+'</select>';
+      html += '<button class="hint-btn" data-mean="'+p.targets[t.answer.toLowerCase()]+'">뜻?</button>';
+    }
+  });
+  html += '</div>';
+  if (!showOriginal) {
+    html += '<div class="wordbank"><b>Word Bank</b><br>' + bank.map(w=>'<span class="chip">'+w+'</span>').join('') + '</div>';
+    html += '<div class="bar"><button class="btn btn-primary" id="grade">채점하기</button>' +
+            '<button class="btn btn-ghost" id="reset">다시</button></div>';
+    html += '<div class="result-msg" id="resultMsg"></div>';
+  }
+  content.innerHTML = html;
+
+  document.getElementById("toggleBtn").onclick = () => { showOriginal = !showOriginal; renderFill(); };
+  if (showOriginal) return;
+
+  content.querySelectorAll(".hint-btn").forEach(b => b.onclick = () => alert("뜻: " + b.dataset.mean));
+  document.getElementById("grade").onclick = () => {
+    let correct = 0, total = 0;
+    content.querySelectorAll(".blank-select").forEach(s => {
+      total++;
+      s.classList.remove("correct","wrong");
+      if (s.value.toLowerCase() === s.dataset.answer) { s.classList.add("correct"); correct++; }
+      else s.classList.add("wrong");
+    });
+    const msg = document.getElementById("resultMsg");
+    const pct = Math.round(correct/total*100);
+    msg.textContent = "✅ " + correct + " / " + total + " 정답 (" + pct + "%)";
+    msg.style.color = pct===100 ? "#065f46" : (pct>=60 ? "#4338ca" : "#991b1b");
+  };
+  document.getElementById("reset").onclick = renderFill;
+}
+
+// ---------- 모드 2: 문맥추론 ----------
+let ctxPos = 0;
+function targetList(p){ return Object.keys(p.targets); }
+function sentenceOf(text, word) {
+  const clean = text.replace(/\*\*/g,"");
+  const sents = clean.match(/[^.!?]+[.!?]/g) || [clean];
+  return (sents.find(s => new RegExp("\\b"+word+"\\b","i").test(s)) || "").trim();
+}
+function renderContext() {
+  const p = PASSAGES[cur];
+  const words = targetList(p);
+  if (ctxPos >= words.length) {
+    content.innerHTML = '<div class="fc"><div>문맥추론 완료! 🎉</div>' +
+      '<div class="bar" style="justify-content:center;"><button class="btn btn-primary" id="again">다시</button></div></div>';
+    document.getElementById("again").onclick = () => { ctxPos=0; renderContext(); };
+    return;
+  }
+  const word = words[ctxPos];
+  const sent = sentenceOf(p.text, word).replace(new RegExp("\\b"+word+"\\b","i"), '<span class="ctx-blank">?</span>');
+  const correctMean = p.targets[word];
+  const distractors = shuffle(words.filter(w=>w!==word)).slice(0,3).map(w=>p.targets[w]);
+  const opts = shuffle([correctMean, ...distractors]);
+  content.innerHTML =
+    '<p style="color:#888;font-size:0.85rem;">문맥을 보고 빈칸 단어의 뜻을 추측하세요.</p>' +
+    '<div class="ctx-sentence">' + sent + '</div>' +
+    opts.map(o=>'<button class="opt">'+o+'</button>').join('') +
+    '<div class="reveal" id="reveal"></div>' +
+    '<div class="ctx-progress">' + (ctxPos+1) + ' / ' + words.length + '</div>';
+  content.querySelectorAll(".opt").forEach(btn => btn.onclick = () => {
+    if (btn.dataset.done) return;
+    const ok = btn.textContent === correctMean;
+    content.querySelectorAll(".opt").forEach(b => {
+      b.dataset.done="1";
+      if (b.textContent === correctMean) b.classList.add("correct");
+      else if (b===btn) b.classList.add("wrong");
+    });
+    document.getElementById("reveal").innerHTML =
+      "정답 단어: <b style='color:#4338ca'>" + word + "</b> — " + correctMean +
+      '<br><button class="btn btn-ghost" id="nextCtx" style="margin-top:10px;">다음 ▶</button>';
+    document.getElementById("nextCtx").onclick = () => { ctxPos++; renderContext(); };
+  });
+}
+
+// ---------- 모드 3: 복습카드 ----------
+let fcPos = 0;
+function renderReview() {
+  const p = PASSAGES[cur];
+  const words = targetList(p);
+  const word = words[fcPos];
+  const sent = sentenceOf(p.text, word).replace(/\*\*/g,"");
+  content.innerHTML =
+    '<div class="fc" id="fc"><div class="w">'+word+'</div>' +
+    '<div class="s">"'+sent+'"</div>' +
+    '<div class="m">'+p.targets[word]+'</div>' +
+    '<p style="color:#bbb;font-size:0.8rem;margin-top:14px;">카드를 클릭하면 뜻이 보여요</p></div>' +
+    '<div class="bar"><button class="btn btn-ghost" id="pv">◀ 이전</button>' +
+    '<span style="flex:1;text-align:center;align-self:center;color:#999;">'+(fcPos+1)+' / '+words.length+'</span>' +
+    '<button class="btn btn-primary" id="nx">다음 ▶</button></div>';
+  document.getElementById("fc").onclick = () => document.getElementById("fc").classList.toggle("show");
+  document.getElementById("pv").onclick = () => { fcPos=(fcPos-1+words.length)%words.length; renderReview(); };
+  document.getElementById("nx").onclick = () => { fcPos=(fcPos+1)%words.length; renderReview(); };
+}
+
+// 시작
+render();
+</script>
+</body>
+</html>

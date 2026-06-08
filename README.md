@@ -22,6 +22,20 @@
 
 ---
 
+## 🧰 실습 자료 (바로 사용 가능)
+
+| 폴더/파일 | 내용 |
+|------|------|
+| [data/sample_vocab_40.csv](data/sample_vocab_40.csv) | 단어장 황금표준 40단어 (단어·품사·뜻·예문·예문뜻·유의어/반의어·난이도·교육과정) |
+| [data/sample_passages.md](data/sample_passages.md) | 실습용 지문 3편 (원문→빈칸→Word Bank→타겟어휘) |
+| [demos/01_flashcard.html](demos/01_flashcard.html) | **동작 예제** — 플래시카드+퀴즈+간격반복 (더블클릭 실행) |
+| [demos/02_passage_vocab.html](demos/02_passage_vocab.html) | **동작 예제** — 지문→빈칸·문맥추론·복습 (더블클릭 실행) |
+
+> 두 데모 모두 `<script>` 안의 `여기만 바꾸면` 구역만 교체하면 새 단어장/지문으로 즉시 동작합니다.
+> 자세한 사용·배포는 [demos/README.md](demos/README.md) 참고.
+
+---
+
 ## 🎯 학습 결과물
 
 워크숍/강의가 끝나면 모든 참가 교사가:
