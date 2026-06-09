@@ -53,6 +53,18 @@
           margin-top: 14px; white-space: pre-wrap; }
   .quote { font-size: 2.1rem; line-height: 1.6; font-style: italic; }
 
+  /* 파일 열기 링크 버튼 */
+  .linkrow { display: flex; gap: 18px; margin-top: 22px; flex-wrap: wrap; }
+  .linkbtn { display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+    background: #7c5cff; color: #fff; padding: 16px 26px; border-radius: 14px;
+    font-size: 1.3rem; font-weight: 700; transition: transform .15s, background .15s; }
+  .linkbtn:hover { background: #9579ff; transform: translateY(-3px); }
+  .linkbtn.alt { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); }
+  .linkbtn.alt:hover { background: rgba(255,255,255,0.22); }
+  .linkbtn small { font-size: 0.85rem; font-weight: 400; color: #e9e4ff; }
+  a.inline { color: #7ee787; text-decoration: underline; text-underline-offset: 4px; }
+  a.inline:hover { color: #aef5b8; }
+
   /* 컨트롤 */
   .nav { position: fixed; bottom: 22px; right: 28px; display: flex; gap: 10px; align-items: center; z-index: 10; }
   .nav button { background: rgba(255,255,255,0.12); border: none; color: #fff; width: 46px; height: 46px;
@@ -111,10 +123,12 @@
   <section class="slide center">
     <div class="kicker">먼저 결과물부터</div>
     <h2>이런 게 나옵니다 🎉</h2>
-    <p class="big">데모 두 개를 직접 만져보세요</p>
-    <div class="code">demos/01_flashcard.html   ← 플래시카드 · 퀴즈 · 간격반복
-demos/02_passage_vocab.html ← 지문 빈칸 · 문맥추론 · 복습</div>
-    <p class="muted" style="margin-top:24px;">둘 다 더블클릭이면 실행. 설치·계정 필요 없음.</p>
+    <p class="big">아래를 눌러 데모를 새 탭에서 열어보세요</p>
+    <div class="linkrow">
+      <a class="linkbtn" href="../demos/01_flashcard.html" target="_blank" rel="noopener">🃏 플래시카드 데모<small>퀴즈·간격반복</small></a>
+      <a class="linkbtn" href="../demos/02_passage_vocab.html" target="_blank" rel="noopener">📖 지문 어휘 데모<small>빈칸·문맥추론·복습</small></a>
+    </div>
+    <p class="muted" style="margin-top:24px;">둘 다 설치·계정 필요 없음. 더블클릭으로도 실행됩니다.</p>
   </section>
 
   <!-- 6 -->
@@ -133,7 +147,10 @@ demos/02_passage_vocab.html ← 지문 빈칸 · 문맥추론 · 복습</div>
     <h2>데이터가 곧 앱의 품질</h2>
     <p>"잘 만든 단어장"의 황금 표준 — 8컬럼</p>
     <div class="code">단어 · 품사 · 뜻 · 예문 · 예문뜻 · 유의어/반의어 · 난이도(CEFR) · 교육과정</div>
-    <p class="muted" style="margin-top:20px;">👉 <span class="accent">data/sample_vocab_40.csv</span> 그대로 가져다 쓰세요. 30~50단어면 충분.</p>
+    <div class="linkrow">
+      <a class="linkbtn alt" href="../data/sample_vocab_40.csv" target="_blank" rel="noopener">📄 어휘 40단어 CSV 열기</a>
+    </div>
+    <p class="muted" style="margin-top:18px;">👉 그대로 가져다 쓰세요. 30~50단어면 충분.</p>
   </section>
 
   <!-- 8 -->
@@ -155,8 +172,11 @@ demos/02_passage_vocab.html ← 지문 빈칸 · 문맥추론 · 복습</div>
     <h2>지문 → 어휘 파이프라인</h2>
     <p class="big">① 원문 &nbsp;→&nbsp; ② 타겟 어휘 &nbsp;→&nbsp; ③ 빈칸 지문</p>
     <p class="big">→&nbsp; ④ Word Bank &nbsp;→&nbsp; ⑤ 학습 활동 &nbsp;→&nbsp; ⑥ 배포</p>
-    <p class="muted" style="margin-top:28px;">교사가 단어를 <span class="accent2">**굵게**</span> 표시 → 그 자리가 빈칸이 됩니다.<br>
-    👉 <span class="accent">data/sample_passages.md</span> 지문 3편 제공.</p>
+    <p class="muted" style="margin-top:28px;">교사가 단어를 <span class="accent2">**굵게**</span> 표시 → 그 자리가 빈칸이 됩니다.</p>
+    <div class="linkrow">
+      <a class="linkbtn alt" href="../data/sample_passages.md" target="_blank" rel="noopener">📄 지문 3편 보기</a>
+      <a class="linkbtn" href="../demos/02_passage_vocab.html" target="_blank" rel="noopener">▶ 지문 어휘 데모 실행</a>
+    </div>
   </section>
 
   <!-- 10 -->
