@@ -65,6 +65,12 @@
   a.inline { color: #7ee787; text-decoration: underline; text-underline-offset: 4px; }
   a.inline:hover { color: #aef5b8; }
 
+  /* 데모 초기화면 미리보기 */
+  .shots { display: flex; gap: 30px; margin-top: 22px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .shot { background: #fff; border-radius: 14px; padding: 8px; box-shadow: 0 14px 34px rgba(0,0,0,0.45); }
+  .shot img { max-height: 27vh; max-width: 36vw; border-radius: 8px; display: block; }
+  .shot figcaption { color: #cbc3f0; font-size: 0.95rem; margin-top: 8px; text-align: center; }
+
   /* 컨트롤 */
   .nav { position: fixed; bottom: 22px; right: 28px; display: flex; gap: 10px; align-items: center; z-index: 10; }
   .nav button { background: rgba(255,255,255,0.12); border: none; color: #fff; width: 46px; height: 46px;
@@ -123,12 +129,16 @@
   <section class="slide center">
     <div class="kicker">먼저 결과물부터</div>
     <h2>이런 게 나옵니다 🎉</h2>
-    <p class="big">아래를 눌러 데모를 새 탭에서 열어보세요</p>
+    <p class="muted" style="font-size:1.3rem;">아래 버튼을 눌러 데모를 새 탭에서 열어보세요</p>
     <div class="linkrow">
       <a class="linkbtn" href="../demos/01_flashcard.html" target="_blank" rel="noopener">🃏 플래시카드 데모<small>퀴즈·간격반복</small></a>
       <a class="linkbtn" href="../demos/02_passage_vocab.html" target="_blank" rel="noopener">📖 지문 어휘 데모<small>빈칸·문맥추론·복습</small></a>
     </div>
-    <p class="muted" style="margin-top:24px;">둘 다 설치·계정 필요 없음. 더블클릭으로도 실행됩니다.</p>
+    <div class="shots">
+      <figure class="shot"><img src="img/demo_flashcard.png" alt="플래시카드 데모 초기화면"><figcaption>🃏 플래시카드 데모 초기화면</figcaption></figure>
+      <figure class="shot"><img src="img/demo_passage.png" alt="지문 어휘 데모 초기화면"><figcaption>📖 지문 어휘 데모 초기화면</figcaption></figure>
+    </div>
+    <p class="muted" style="margin-top:18px;">둘 다 설치·계정 필요 없음. 더블클릭으로도 실행됩니다.</p>
   </section>
 
   <!-- 6 -->
