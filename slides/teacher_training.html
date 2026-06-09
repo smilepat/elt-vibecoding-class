@@ -104,7 +104,7 @@
     <div class="cards">
       <div class="ic"><h3>① 동작하는 앱</h3><p>HTML 한 파일. 더블클릭하면 실행되는 진짜 어휘 학습앱.</p></div>
       <div class="ic"><h3>② 공유 링크</h3><p>학생에게 카톡으로 보낼 수 있는 배포 링크.</p></div>
-      <div class="ic"><h3>③ 재사용 틀</h3><p>다음 단어장·지문을 5분 만에 갈아 끼우는 템플릿.</p></div>
+      <div class="ic"><h3>③ 재사용 틀</h3><p>앱은 그대로, 데이터(단어·지문)만 갈아 끼워 다음 수업에 다시 쓰는 템플릿.</p></div>
     </div>
   </section>
 
@@ -315,6 +315,14 @@ HTML 파일 하나로 동작하는 '지문 빈칸 어휘 학습' 앱을 만들�
     <div class="code">"지문과 타겟 단어만 바꾸면 동작하게
 그 부분을 위로 모으고, 한글 주석으로 설명해줘."</div>
     <p class="muted" style="margin-top:22px;">→ 매주 새 지문을 <span class="accent">5분</span> 만에. 앱이 아니라 <b style="color:#fff">앱 찍어내는 틀</b>을 가져갑니다.</p>
+  </section>
+
+  <!-- 11b · 재사용 틀이 만들어진 화면 -->
+  <section class="slide center">
+    <div class="kicker">숨은 핵심 · 재사용 틀</div>
+    <h2>틀은 <span class="accent3">.html 파일 안</span>에 만들어집니다</h2>
+    <figure class="bigshot"><img src="img/template_block.png" alt="재사용 틀 — 코드 속 데이터 블록만 갈아 끼움"></figure>
+    <p class="muted" style="margin-top:12px; max-width:1000px;">화면·버튼·채점 로직(회색)은 <b style="color:#fff">그대로 두고</b>, 주석으로 표시된 데이터 영역(<span class="accent3">VOCAB</span>·<span class="accent3">PASSAGES</span>)만 갈아 끼웁니다. 단어장 앱·지문 앱 모두 같은 구조 — 이 블록 하나가 곧 재사용 틀.</p>
   </section>
 
   <!-- 12 -->

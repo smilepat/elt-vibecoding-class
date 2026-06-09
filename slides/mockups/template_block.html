@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>재사용 틀</title>
+<style>
+  body { margin:0; background:#0d1117; padding:28px; font-family:'Malgun Gothic','Segoe UI',sans-serif; display:flex; justify-content:center; }
+  .panel { width:800px; background:#0d1117; border:1px solid #30363d; border-radius:12px; overflow:hidden; }
+  .head { background:#161b22; padding:9px 14px; color:#8b949e; font-size:13px; border-bottom:1px solid #30363d; }
+  pre { margin:0; padding:16px 20px; font-family:Consolas,monospace; font-size:14px; line-height:1.75; white-space:pre; color:#c9d1d9; }
+  .dim { color:#4b5563; }
+  .box { background:rgba(124,92,255,.12); border:2px solid #7c5cff; border-radius:8px; padding:12px 12px 10px; margin:10px 0; position:relative; }
+  .lbl { position:absolute; right:14px; top:-13px; background:#7c5cff; color:#fff; font-size:12.5px; font-weight:700; padding:3px 12px; border-radius:6px; font-family:'Malgun Gothic',sans-serif; }
+  .cm { color:#8b949e; } .kw { color:#ff7b72; } .key { color:#79c0ff; } .str { color:#a5d6ff; }
+  .note { color:#7ee787; }
+</style></head><body>
+  <div class="panel">
+    <div class="head">vocab.html — 완성된 앱 한 파일이 곧 "재사용 틀"</div>
+<pre><span class="dim">&lt;style&gt; ... 카드·버튼 디자인 ...  &lt;/style&gt;        <span class="note">← 안 건드림</span></span>
+<span class="dim">&lt;body&gt; ... 화면 구조 ... &lt;/body&gt;              <span class="note">← 안 건드림</span></span>
+
+<div class="box"><span class="lbl">✏️ 여기만 갈아 끼우면 새 앱</span><span class="cm">/* ⬇ 여기만 바꾸면 새 단어장으로 동작 ⬇ */</span>
+<span class="kw">const</span> VOCAB = [
+  { <span class="key">word</span>:<span class="str">"apple"</span>, <span class="key">mean</span>:<span class="str">"사과"</span>, ... },
+  { <span class="key">word</span>:<span class="str">"brave"</span>, <span class="key">mean</span>:<span class="str">"용감한"</span>, ... },
+];
+<span class="cm">/* ⬆ 여기까지가 바꾸면 되는 부분 ⬆ */</span></div>
+
+<span class="dim">&lt;script&gt; ... 뒤집기·퀴즈·채점 로직 ... &lt;/script&gt;  <span class="note">← 안 건드림</span></span></pre>
+  </div>
+</body></html>
