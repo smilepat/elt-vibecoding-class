@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초등 어휘 (스포츠·가족·food) — 표로 보기</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Malgun Gothic', sans-serif; background: #f4f5fb; color: #2d2d3a; padding: 24px; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { color: #4338ca; font-size: 1.5rem; }
+  .sub { color: #888; font-size: 0.9rem; margin: 6px 0 16px; }
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+  input[type="search"] { flex: 1; min-width: 180px; padding: 10px 14px; border: 1px solid #ddd;
+    border-radius: 10px; font-size: 0.95rem; }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fbtn { padding: 9px 16px; border: 1px solid #c7d2fe; border-radius: 999px; background: #fff;
+    color: #4338ca; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+  .fbtn.active { background: #4338ca; color: #fff; border-color: #4338ca; }
+  .count { color: #4338ca; font-weight: 700; }
+  .source { font-size: 0.8rem; color: #aaa; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 4px 18px rgba(67,56,202,0.08); font-size: 0.92rem; }
+  thead { background: #4338ca; color: #fff; position: sticky; top: 0; }
+  th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid #eef0f7; vertical-align: top; }
+  tbody tr:hover { background: #f8f8ff; }
+  td.word { font-weight: 700; color: #4338ca; }
+  td.pos { color: #999; font-style: italic; }
+  .topic { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 700; font-size: 0.8rem; color: #fff; }
+  .t-sport { background: #f97316; }
+  .t-family { background: #ec4899; }
+  .t-food { background: #16a34a; }
+  .lvl { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-weight: 600; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🧒 초등 어휘 — 스포츠 · 가족 · food</h1>
+  <div class="sub">data/elementary_sample_vocab.csv — 주제 컬럼 포함, 36단어 (A1~A2)</div>
+  <div class="toolbar">
+    <input type="search" id="q" placeholder="🔍 단어·뜻으로 검색…">
+    <div class="filters" id="filters">
+      <button class="fbtn active" data-topic="">전체</button>
+      <button class="fbtn" data-topic="스포츠">⚽ 스포츠</button>
+      <button class="fbtn" data-topic="가족">👨‍👩‍👧 가족</button>
+      <button class="fbtn" data-topic="food">🍎 food</button>
+    </div>
+    <span class="count" id="count"></span>
+    <span class="source" id="source"></span>
+  </div>
+  <table>
+    <thead><tr>
+      <th>주제</th><th>단어</th><th>품사</th><th>뜻</th><th>예문</th><th>예문뜻</th><th>난이도</th><th>교육과정</th>
+    </tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+/* 로컬(file://)에서는 Chrome이 CSV fetch를 막으므로 내장 데이터로 폴백.
+   웹(Netlify 등)에서는 같은 폴더의 elementary_sample_vocab.csv 를 fetch 해 최신 표시. */
+const CSV_FALLBACK = `주제,단어,품사,뜻,예문,예문뜻,난이도,교육과정
+스포츠,soccer,n,축구,I play soccer with my friends.,나는 친구들과 축구를 한다.,A1,초등
+스포츠,basketball,n,농구,She is good at basketball.,그녀는 농구를 잘한다.,A1,초등
+스포츠,baseball,n,야구,We watch a baseball game.,우리는 야구 경기를 본다.,A1,초등
+스포츠,swim,v,수영하다,I can swim in the pool.,나는 수영장에서 수영할 수 있다.,A1,초등
+스포츠,run,v,달리다,The boy can run very fast.,그 소년은 매우 빠르게 달릴 수 있다.,A1,초등
+스포츠,jump,v,뛰다; 점프하다,Can you jump high?,너는 높이 뛸 수 있니?,A1,초등
+스포츠,ball,n,공,Throw the ball to me.,공을 나에게 던져줘.,A1,초등
+스포츠,team,n,팀,My team won the game.,우리 팀이 경기에서 이겼다.,A1,초등
+스포츠,win,v,이기다,I want to win the race.,나는 경주에서 이기고 싶다.,A2,초등
+스포츠,play,v,(놀이·운동을) 하다; 놀다,Let us play together.,우리 같이 놀자.,A1,초등
+스포츠,race,n,경주,She ran in the race.,그녀는 경주에서 달렸다.,A2,초등
+스포츠,tennis,n,테니스,My father plays tennis.,우리 아빠는 테니스를 친다.,A1,초등
+가족,mother,n,어머니,My mother is very kind.,우리 어머니는 매우 친절하다.,A1,초등
+가족,father,n,아버지,My father works in an office.,우리 아버지는 사무실에서 일한다.,A1,초등
+가족,sister,n,여동생; 누나; 언니,I have one sister.,나는 여동생이 한 명 있다.,A1,초등
+가족,brother,n,남동생; 형; 오빠,My brother is ten years old.,우리 형은 열 살이다.,A1,초등
+가족,grandmother,n,할머니,My grandmother makes great food.,우리 할머니는 맛있는 음식을 만드신다.,A1,초등
+가족,grandfather,n,할아버지,My grandfather tells fun stories.,우리 할아버지는 재미있는 이야기를 해주신다.,A1,초등
+가족,family,n,가족,I love my family.,나는 우리 가족을 사랑한다.,A1,초등
+가족,baby,n,아기,The baby is sleeping now.,아기가 지금 자고 있다.,A1,초등
+가족,parent,n,부모,My parents are teachers.,우리 부모님은 선생님이다.,A2,초등
+가족,aunt,n,이모; 고모,My aunt lives in Busan.,우리 이모는 부산에 산다.,A2,초등
+가족,uncle,n,삼촌; 외삼촌,My uncle has a big dog.,우리 삼촌은 큰 개를 키운다.,A2,초등
+가족,cousin,n,사촌,My cousin is my best friend.,내 사촌은 나의 가장 친한 친구다.,A2,초등
+food,apple,n,사과,I eat an apple every day.,나는 매일 사과를 먹는다.,A1,초등
+food,bread,n,빵,She likes warm bread.,그녀는 따뜻한 빵을 좋아한다.,A1,초등
+food,rice,n,밥; 쌀,We eat rice for dinner.,우리는 저녁으로 밥을 먹는다.,A1,초등
+food,milk,n,우유,I drink milk every morning.,나는 매일 아침 우유를 마신다.,A1,초등
+food,egg,n,달걀,I want two eggs.,나는 달걀 두 개를 원한다.,A1,초등
+food,water,n,물,Please give me some water.,물 좀 주세요.,A1,초등
+food,banana,n,바나나,The monkey eats a banana.,원숭이가 바나나를 먹는다.,A1,초등
+food,chicken,n,닭고기; 닭,We had chicken for lunch.,우리는 점심으로 닭고기를 먹었다.,A1,초등
+food,cheese,n,치즈,I like cheese on my pizza.,나는 피자에 치즈를 좋아한다.,A1,초등
+food,soup,n,수프; 국,The soup is very hot.,수프가 매우 뜨겁다.,A1,초등
+food,fruit,n,과일,Fruit is good for you.,과일은 너에게 좋다.,A1,초등
+food,vegetable,n,채소,Eat your vegetables please.,채소를 먹으렴.,A2,초등`;
+
+let ROWS = [];
+let curTopic = "";
+
+const TOPIC_CLASS = { "스포츠":"t-sport", "가족":"t-family", "food":"t-food" };
+
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  lines.shift(); // 헤더 제거
+  return lines.map(line => line.split(",")); // 이 데이터엔 셀 내 콤마 없음 → 단순 split
+}
+
+function render() {
+  const tbody = document.getElementById("tbody");
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const shown = ROWS.filter(c =>
+    (!curTopic || c[0] === curTopic) &&
+    (!q || c.join(" ").toLowerCase().includes(q))
+  );
+  tbody.innerHTML = shown.map(c =>
+    `<tr><td><span class="topic ${TOPIC_CLASS[c[0]]||''}">${c[0]}</span></td>` +
+    `<td class="word">${c[1]}</td><td class="pos">${c[2]}</td><td>${c[3]}</td>` +
+    `<td>${c[4]}</td><td>${c[5]}</td><td><span class="lvl">${c[6]}</span></td><td>${c[7]}</td></tr>`
+  ).join("");
+  document.getElementById("count").textContent = shown.length + " / " + ROWS.length + " 단어";
+}
+
+document.getElementById("q").addEventListener("input", render);
+document.querySelectorAll(".fbtn").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".fbtn").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  curTopic = b.dataset.topic;
+  render();
+});
+
+// 웹에서는 CSV fetch(최신), 로컬 file://에서는 내장 데이터로 폴백
+async function load() {
+  let text = CSV_FALLBACK, src = "내장 데이터(로컬)";
+  try {
+    const res = await fetch("elementary_sample_vocab.csv");
+    if (res.ok) { text = await res.text(); src = "elementary_sample_vocab.csv (실시간)"; }
+  } catch (e) { /* file:// 에서는 fetch 차단 → 폴백 유지 */ }
+  ROWS = parseCSV(text);
+  document.getElementById("source").textContent = "출처: " + src;
+  render();
+}
+load();
+</script>
+</body>
+</html>

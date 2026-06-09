@@ -27,7 +27,9 @@
 | 폴더/파일 | 내용 |
 |------|------|
 | [data/sample_vocab_40.csv](data/sample_vocab_40.csv) | 단어장 황금표준 40단어 (단어·품사·뜻·예문·예문뜻·유의어/반의어·난이도·교육과정) |
+| [data/elementary_sample_vocab.csv](data/elementary_sample_vocab.csv) | 초등 어휘 36단어 — **주제(스포츠·가족·food)** 컬럼 포함 (A1~A2) |
 | [data/sample_passages.md](data/sample_passages.md) | 실습용 지문 3편 (원문→빈칸→Word Bank→타겟어휘) |
+| [data/vocab_viewer.html](data/vocab_viewer.html) · [data/elementary_vocab_viewer.html](data/elementary_vocab_viewer.html) | CSV를 브라우저에서 **표로 보는 뷰어** (Chrome 다운로드 방지, 검색·주제 필터) |
 | [demos/01_flashcard.html](demos/01_flashcard.html) | **동작 예제** — 플래시카드+퀴즈+간격반복 (더블클릭 실행) |
 | [demos/02_passage_vocab.html](demos/02_passage_vocab.html) | **동작 예제** — 지문→빈칸·문맥추론·복습 (더블클릭 실행) |
 | [slides/teacher_training.html](slides/teacher_training.html) | **연수용 슬라이드** 15장 (←→ 이동, F 전체화면, 더블클릭 실행) |
