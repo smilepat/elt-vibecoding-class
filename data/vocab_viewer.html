@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어휘 40단어 — 표로 보기</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Malgun Gothic', sans-serif; background: #f4f5fb; color: #2d2d3a; padding: 24px; }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { color: #4338ca; font-size: 1.5rem; }
+  .sub { color: #888; font-size: 0.9rem; margin: 6px 0 16px; }
+  .toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+  input[type="search"] { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid #ddd;
+    border-radius: 10px; font-size: 0.95rem; }
+  .count { color: #4338ca; font-weight: 700; }
+  .source { font-size: 0.8rem; color: #aaa; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 4px 18px rgba(67,56,202,0.08); font-size: 0.92rem; }
+  thead { background: #4338ca; color: #fff; position: sticky; top: 0; }
+  th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid #eef0f7; vertical-align: top; }
+  tbody tr:hover { background: #f8f8ff; }
+  td.word { font-weight: 700; color: #4338ca; }
+  td.pos { color: #999; font-style: italic; }
+  .lvl { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-weight: 600; font-size: 0.8rem; }
+  .err { background: #fff3cd; color: #856404; padding: 14px; border-radius: 10px; margin-bottom: 12px; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📄 어휘 40단어 데이터</h1>
+  <div class="sub">data/sample_vocab_40.csv — 단어장 황금표준 8컬럼</div>
+  <div class="toolbar">
+    <input type="search" id="q" placeholder="🔍 단어·뜻으로 검색…">
+    <span class="count" id="count"></span>
+    <span class="source" id="source"></span>
+  </div>
+  <div id="errBox"></div>
+  <table>
+    <thead><tr>
+      <th>단어</th><th>품사</th><th>뜻</th><th>예문</th><th>예문뜻</th><th>유의어/반의어</th><th>난이도</th><th>교육과정</th>
+    </tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+/* 로컬(file://)에서는 Chrome이 CSV fetch를 막으므로 내장 데이터로 폴백.
+   웹(Netlify 등)에서는 같은 폴더의 sample_vocab_40.csv 를 fetch 해 최신 표시. */
+const CSV_FALLBACK = `단어,품사,뜻,예문,예문뜻,유의어/반의어,난이도,교육과정
+achieve,v,성취하다,She worked hard to achieve her goals.,그녀는 목표를 성취하기 위해 열심히 일했다.,accomplish / fail,B1,중등
+analyze,v,분석하다,Scientists analyze data to find patterns.,과학자들은 패턴을 찾기 위해 데이터를 분석한다.,examine / ignore,B2,고등
+benefit,n,이익; 혜택,Exercise has many health benefits.,운동은 많은 건강상의 이익이 있다.,advantage / harm,B1,중등
+challenge,n,도전; 난제,Climate change is a global challenge.,기후 변화는 전 지구적 난제이다.,difficulty / ease,B1,중등
+consider,v,고려하다,Please consider all the options carefully.,모든 선택지를 신중히 고려해 주세요.,think about / ignore,B1,중등
+contribute,v,기여하다,Everyone can contribute to a cleaner planet.,모두가 더 깨끗한 지구에 기여할 수 있다.,donate / withhold,B2,고등
+demonstrate,v,입증하다; 보여주다,The study demonstrates a clear link.,그 연구는 명확한 연관성을 입증한다.,show / hide,B2,고등
+determine,v,결정하다; 알아내다,Researchers determine the cause of the problem.,연구자들은 문제의 원인을 알아낸다.,decide / hesitate,B2,고등
+develop,v,발전시키다; 개발하다,Children develop language skills quickly.,아이들은 언어 능력을 빠르게 발전시킨다.,grow / decline,A2,초등
+emphasize,v,강조하다,The teacher emphasized the main idea.,선생님은 핵심 내용을 강조했다.,stress / downplay,B2,고등
+encourage,v,격려하다; 장려하다,Good feedback encourages students to learn.,좋은 피드백은 학생들이 배우도록 격려한다.,inspire / discourage,B1,중등
+establish,v,설립하다; 확립하다,They established a new school in the village.,그들은 마을에 새 학교를 설립했다.,found / abolish,B2,고등
+evaluate,v,평가하다,Teachers evaluate student progress each term.,교사들은 매 학기 학생의 진전을 평가한다.,assess / overlook,B2,고등
+evident,adj,분명한,The benefits of reading are evident.,독서의 이점은 분명하다.,obvious / unclear,B2,고등
+factor,n,요인,Sleep is an important factor in health.,수면은 건강의 중요한 요인이다.,element / result,B1,중등
+generate,v,발생시키다; 만들어내다,Solar panels generate clean energy.,태양광 패널은 청정 에너지를 발생시킨다.,produce / consume,B2,고등
+identify,v,식별하다; 알아보다,Can you identify the main problem?,주요 문제를 알아볼 수 있나요?,recognize / confuse,B1,중등
+impact,n,영향,Technology has a big impact on our lives.,기술은 우리 삶에 큰 영향을 미친다.,effect / cause,B1,중등
+improve,v,향상시키다,Reading every day improves your vocabulary.,매일 읽는 것은 어휘력을 향상시킨다.,enhance / worsen,A2,초등
+indicate,v,나타내다; 가리키다,The results indicate a positive trend.,결과는 긍정적인 추세를 나타낸다.,show / conceal,B2,고등
+influence,v,영향을 주다,Parents strongly influence their children.,부모는 자녀에게 강한 영향을 준다.,affect / ignore,B1,중등
+involve,v,포함하다; 관련시키다,The project involves many volunteers.,그 프로젝트는 많은 자원봉사자를 포함한다.,include / exclude,B2,고등
+maintain,v,유지하다,It is important to maintain a healthy diet.,건강한 식단을 유지하는 것이 중요하다.,keep / abandon,B1,중등
+obtain,v,얻다; 획득하다,You can obtain a free ticket online.,온라인에서 무료 표를 얻을 수 있다.,get / lose,B2,고등
+occur,v,발생하다; 일어나다,Earthquakes occur along fault lines.,지진은 단층선을 따라 발생한다.,happen / cease,B2,고등
+participate,v,참여하다,Students participate in many activities.,학생들은 많은 활동에 참여한다.,join / withdraw,B1,중등
+perceive,v,인식하다; 지각하다,People perceive colors differently.,사람들은 색을 서로 다르게 인식한다.,sense / overlook,C1,고등
+predict,v,예측하다,Scientists predict the weather using data.,과학자들은 데이터로 날씨를 예측한다.,forecast / recall,B1,중등
+preserve,v,보존하다,We must preserve our natural environment.,우리는 자연환경을 보존해야 한다.,protect / destroy,B2,고등
+previous,adj,이전의,Read the previous chapter before this one.,이 장 전에 이전 장을 읽으세요.,prior / next,B1,중등
+promote,v,촉진하다; 홍보하다,The campaign promotes healthy habits.,그 캠페인은 건강한 습관을 촉진한다.,encourage / hinder,B2,고등
+recognize,v,인식하다; 알아보다,I didn't recognize my old friend.,나는 옛 친구를 알아보지 못했다.,identify / forget,B1,중등
+reduce,v,줄이다,We should reduce plastic waste.,우리는 플라스틱 쓰레기를 줄여야 한다.,decrease / increase,A2,초등
+require,v,필요로 하다; 요구하다,This task requires a lot of patience.,이 일은 많은 인내를 필요로 한다.,need / provide,B1,중등
+resource,n,자원,Water is a precious natural resource.,물은 귀중한 천연자원이다.,asset / waste,B1,중등
+significant,adj,중요한; 상당한,There was a significant change in scores.,점수에 상당한 변화가 있었다.,important / minor,B2,고등
+solve,v,해결하다,Teamwork helps us solve big problems.,팀워크는 우리가 큰 문제를 해결하도록 돕는다.,resolve / cause,A2,초등
+specific,adj,구체적인; 특정한,Give a specific example to explain.,설명하기 위해 구체적인 예를 드세요.,particular / general,B1,중등
+sufficient,adj,충분한,We have sufficient food for the trip.,우리는 여행에 충분한 음식이 있다.,enough / lacking,B2,고등
+vary,v,다양하다; 달라지다,Prices vary from store to store.,가격은 가게마다 다양하다.,differ / match,B2,고등`;
+
+let ROWS = [];
+
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  lines.shift(); // 헤더 제거
+  return lines.map(line => line.split(",")); // 이 데이터엔 셀 내 콤마 없음 → 단순 split
+}
+
+function render(filter) {
+  const tbody = document.getElementById("tbody");
+  const q = (filter || "").trim().toLowerCase();
+  const shown = ROWS.filter(c => !q || c.join(" ").toLowerCase().includes(q));
+  tbody.innerHTML = shown.map(c =>
+    `<tr><td class="word">${c[0]}</td><td class="pos">${c[1]}</td><td>${c[2]}</td>` +
+    `<td>${c[3]}</td><td>${c[4]}</td><td>${c[5]}</td>` +
+    `<td><span class="lvl">${c[6]}</span></td><td>${c[7]}</td></tr>`
+  ).join("");
+  document.getElementById("count").textContent = shown.length + " / " + ROWS.length + " 단어";
+}
+
+document.getElementById("q").addEventListener("input", e => render(e.target.value));
+
+// 웹에서는 CSV fetch(최신), 로컬 file://에서는 내장 데이터로 폴백
+async function load() {
+  let text = CSV_FALLBACK, src = "내장 데이터(로컬)";
+  try {
+    const res = await fetch("sample_vocab_40.csv");
+    if (res.ok) { text = await res.text(); src = "sample_vocab_40.csv (실시간)"; }
+  } catch (e) { /* file:// 에서는 fetch 차단 → 폴백 유지 */ }
+  ROWS = parseCSV(text);
+  document.getElementById("source").textContent = "출처: " + src;
+  render("");
+}
+load();
+</script>
+</body>
+</html>
