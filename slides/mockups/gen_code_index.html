@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>index.html 코드 생성</title>
+<style>
+  body { margin:0; font-family:'Malgun Gothic','Segoe UI',sans-serif; background:#f7f7f8; }
+  .chat { max-width:860px; margin:0 auto; padding:26px 24px; }
+  .msg { display:flex; gap:14px; margin-bottom:22px; }
+  .ava { width:38px; height:38px; border-radius:8px; flex:0 0 38px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:14px; }
+  .ava.u { background:#6b7280; } .ava.ai { background:#10a37f; }
+  .name { font-weight:700; font-size:13px; color:#555; margin-bottom:5px; }
+  .bub { background:#fff; border:1px solid #ececf1; border-radius:12px; padding:14px 16px; font-size:15px; color:#222; line-height:1.6; }
+  .code { background:#0d1117; border-radius:10px; margin-top:12px; overflow:hidden; }
+  .codehead { display:flex; justify-content:space-between; align-items:center; background:#161b22; padding:8px 12px; color:#8b949e; font-size:13px; }
+  .copy { background:#21262d; color:#c9d1d9; border:1px solid #30363d; border-radius:6px; padding:4px 12px; font-size:12px; }
+  pre { margin:0; padding:14px 16px; color:#c9d1d9; font-family:Consolas,monospace; font-size:13px; line-height:1.55; white-space:pre; }
+  .tag{color:#7ee787;} .at{color:#79c0ff;} .st{color:#ffa657;} .cm{color:#8b949e;} .kw{color:#ff7b72;}
+  .typing { color:#10a37f; font-size:13px; margin-top:8px; }
+</style></head><body>
+<div class="chat">
+  <div class="msg"><div class="ava u">나</div><div><div class="name">영어 선생님</div>
+    <div class="bub">코딩 모르는 사람용 영어 단어 <b>플래시카드 + 퀴즈</b> 앱을 '하나의 index.html 파일'로 만들어줘. (HTML+CSS+JS 한 파일, 빌드·라이브러리 없이, 한국어 UI) 데이터는 아래 CSV를 코드 안에 넣어줘.</div></div></div>
+  <div class="msg"><div class="ava ai">AI</div><div style="flex:1"><div class="name">생성형 AI</div>
+    <div class="bub">네! 단어 카드 + 퀴즈가 되는 앱을 만들었어요. 전체 코드를 복사해서 사용하세요 👇
+      <div class="code">
+        <div class="codehead"><span>index.html</span><span class="copy">📋 복사</span></div>
+<pre>&lt;<span class="tag">!DOCTYPE</span> html&gt;
+&lt;<span class="tag">html</span> <span class="at">lang</span>=<span class="st">"ko"</span>&gt;
+&lt;<span class="tag">head</span>&gt; &lt;<span class="tag">meta</span> <span class="at">charset</span>=<span class="st">"UTF-8"</span>&gt; &lt;/<span class="tag">head</span>&gt;
+&lt;<span class="tag">body</span>&gt;
+  &lt;<span class="tag">script</span>&gt;
+    <span class="cm">// 단어 데이터 (CSV에서 가져옴)</span>
+    <span class="kw">const</span> WORDS = [
+      { word:<span class="st">"economy"</span>, mean:<span class="st">"경제"</span>, ex:<span class="st">"..."</span> }, ...
+    ];
+    <span class="cm">// 플래시카드 넘기기 · 4지선다 퀴즈 · 점수</span>
+  &lt;/<span class="tag">script</span>&gt;
+&lt;/<span class="tag">body</span>&gt;
+&lt;/<span class="tag">html</span>&gt;</pre>
+      </div>
+      <div class="typing">▍ 코드 생성 중…</div>
+    </div></div></div>
+</div>
+</body></html>

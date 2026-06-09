@@ -32,7 +32,8 @@
 | [data/vocab_viewer.html](data/vocab_viewer.html) · [data/elementary_vocab_viewer.html](data/elementary_vocab_viewer.html) | CSV를 브라우저에서 **표로 보는 뷰어** (Chrome 다운로드 방지, 검색·주제 필터) |
 | [demos/01_flashcard.html](demos/01_flashcard.html) | **동작 예제** — 플래시카드+퀴즈+간격반복 (더블클릭 실행) |
 | [demos/02_passage_vocab.html](demos/02_passage_vocab.html) | **동작 예제** — 지문→빈칸·문맥추론·복습 (더블클릭 실행) |
-| [slides/teacher_training.html](slides/teacher_training.html) | **연수용 슬라이드** 15장 (←→ 이동, F 전체화면, 더블클릭 실행) |
+| [slides/teacher_training.html](slides/teacher_training.html) | **연수용 슬라이드** (단어장+지문 앱, 바이브코딩 루프·6단계 실습, ←→ 이동·F 전체화면) |
+| [slides/new-workshop_생성AI_영어학습앱.html](slides/new-workshop_생성AI_영어학습앱.html) | **3시간 워크샵 슬라이드** 22장 (기획서→콘텐츠→index.html 앱→Netlify 배포, 6세션) |
 
 > 두 데모 모두 `<script>` 안의 `여기만 바꾸면` 구역만 교체하면 새 단어장/지문으로 즉시 동작합니다.
 > 자세한 사용·배포는 [demos/README.md](demos/README.md) 참고.

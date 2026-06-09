@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>워크샵 — 생성형 AI로 영어 학습 앱 만들기</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+    background: #0f0c29; color: #fff; overflow: hidden;
+  }
+  .deck { width: 100vw; height: 100vh; position: relative; }
+  .slide {
+    position: absolute; inset: 0; display: none;
+    flex-direction: column; justify-content: center;
+    padding: 6vh 9vw; opacity: 0; transition: opacity 0.3s;
+    background: linear-gradient(135deg, #11243f, #14323f 55%, #0f4536);
+  }
+  .slide.active { display: flex; opacity: 1; }
+  .kicker { color: #6ee7c7; font-size: 1.05rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 18px; }
+  h1 { font-size: 3.3rem; line-height: 1.2; margin-bottom: 20px; }
+  h2 { font-size: 2.4rem; line-height: 1.25; margin-bottom: 26px; }
+  p, li { font-size: 1.45rem; line-height: 1.7; color: #e3f2ee; }
+  ul { padding-left: 1.4em; }
+  li { margin-bottom: 12px; }
+  .big { font-size: 1.9rem; }
+  .accent { color: #7ee787; font-weight: 700; }
+  .accent2 { color: #ffd479; font-weight: 700; }
+  .accent3 { color: #79c0ff; font-weight: 700; }
+  .muted { color: #9fc4ba; font-size: 1.12rem; }
+  .center { align-items: center; text-align: center; }
+
+  .cards { display: flex; gap: 22px; margin-top: 16px; flex-wrap: wrap; }
+  .ic { flex: 1; min-width: 240px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 18px; padding: 24px; }
+  .ic h3 { font-size: 1.4rem; margin-bottom: 10px; color: #fff; }
+  .ic p { font-size: 1.15rem; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 1.22rem; }
+  th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.15); }
+  th { color: #6ee7c7; }
+  td:first-child { color: #9fc4ba; white-space: nowrap; }
+
+  .step { display: flex; align-items: center; gap: 18px; margin-bottom: 16px; }
+  .num { flex: 0 0 50px; height: 50px; border-radius: 50%; background: #16a37f;
+         display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; }
+
+  .code { background: #0d1117; border: 1px solid #30363d; border-radius: 12px; padding: 18px 22px;
+          font-family: 'Consolas', monospace; font-size: 1.15rem; color: #c9d1d9; line-height: 1.6;
+          margin-top: 14px; white-space: pre-wrap; }
+  .code .c { color: #8b949e; } .code .h { color: #7ee787; }
+  .quote { font-size: 2rem; line-height: 1.55; font-style: italic; }
+
+  .bigshot { background:#fff; border-radius:14px; padding:8px; box-shadow:0 14px 34px rgba(0,0,0,.45);
+    margin-top:14px; align-self:center; }
+  .bigshot img { max-height:50vh; max-width:78vw; border-radius:8px; display:block; }
+
+  .nav { position: fixed; bottom: 22px; right: 28px; display: flex; gap: 10px; align-items: center; z-index: 10; }
+  .nav button { background: rgba(255,255,255,0.12); border: none; color: #fff; width: 46px; height: 46px;
+    border-radius: 50%; font-size: 1.3rem; cursor: pointer; }
+  .nav button:hover { background: rgba(255,255,255,0.25); }
+  .counter { position: fixed; bottom: 30px; left: 28px; color: #9fc4ba; font-size: 1rem; z-index: 10; }
+  .pbar { position: fixed; top: 0; left: 0; height: 5px; background: #16a37f; transition: width 0.3s; z-index: 10; }
+  .hint { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); color: #5b7a72; font-size: 0.9rem; z-index: 10; }
+</style>
+</head>
+<body>
+<div class="pbar" id="pbar"></div>
+<div class="deck" id="deck">
+
+  <!-- 1 · 표지 -->
+  <section class="slide active center">
+    <div class="kicker">초보 바이브코더용 워크샵</div>
+    <h1>생성형 AI로<br><span class="accent">영어 학습 앱</span> 만들기</h1>
+    <p class="big">코딩 안 해본 영어 선생님 · <span class="accent2">3시간</span> · 설치 거의 없음</p>
+    <p class="muted" style="margin-top:28px;">파이썬·터미널 ✕ — AI에게 말로 시키고, 선생님은 교육적 판단·검증</p>
+  </section>
+
+  <!-- 2 · 결과물 약속 -->
+  <section class="slide">
+    <div class="kicker">오늘 끝나면 손에</div>
+    <h2>3시간 뒤, 여러분이 가져가는 것</h2>
+    <div class="cards">
+      <div class="ic"><h3>① 작동하는 앱</h3><p>단어 카드 + 퀴즈가 되는 <b>index.html</b> 한 파일. 더블클릭하면 실행.</p></div>
+      <div class="ic"><h3>② 공유 링크</h3><p>인터넷에 올린 <b>공개 URL</b> — 동료·학생에게 카톡으로 전달.</p></div>
+      <div class="ic"><h3>③ 콘텐츠 시트</h3><p>단어·지문·퀴즈가 담긴 <b>Google Sheets</b> = 우리의 데이터베이스.</p></div>
+    </div>
+  </section>
+
+  <!-- 3 · 바이브코딩이란 -->
+  <section class="slide center">
+    <div class="kicker">먼저, 마인드셋</div>
+    <p class="quote">"바이브코딩"은 코드를 외워 치는 게 아니라,<br>
+    <span class="accent">AI에게 원하는 걸 말로 설명</span>하고<br>
+    <span class="accent2">결과를 보고 다시 고쳐달라</span>고 하는 방식.</p>
+    <p class="muted" style="margin-top:34px; font-size:1.35rem;">영어 선생님의 무기는 <b style="color:#fff">무엇을 가르칠지 아는 것.</b></p>
+  </section>
+
+  <!-- 4 · 오늘의 약속 3가지 -->
+  <section class="slide">
+    <div class="kicker">오늘의 약속 3가지</div>
+    <h2>이 셋만 지키면 됩니다</h2>
+    <div class="step"><div class="num">1</div><p><b>작게 시작</b> — 단어 20개, 기능 1개로. 작동부터 확인.</p></div>
+    <div class="step"><div class="num">2</div><p><b>꼭 눈으로 검증</b> — AI가 준 뜻·예문을 선생님이 확인.</p></div>
+    <div class="step"><div class="num">3</div><p><b>막히면 말로</b> — "더 쉽게 설명해줘" / 증상을 그대로 설명.</p></div>
+  </section>
+
+  <!-- 5 · 진행표 -->
+  <section class="slide">
+    <div class="kicker">진행표 · 약 3시간</div>
+    <h2>오늘의 여정 (6세션)</h2>
+    <table>
+      <tr><th>시간</th><th>세션</th><th>끝나면 손에</th></tr>
+      <tr><td>0:00–0:15</td><td>0. 내 앱 한 줄 정하기</td><td>앱 컨셉 1문장</td></tr>
+      <tr><td>0:15–0:50</td><td>1. AI와 기획서 쓰기</td><td>1쪽 기획서</td></tr>
+      <tr><td>0:50–1:30</td><td>2. AI로 콘텐츠 만들기</td><td>단어 20 + 지문 3 + 퀴즈</td></tr>
+      <tr><td>1:45–2:35</td><td>3. AI로 앱 만들기</td><td><b>작동하는 index.html</b></td></tr>
+      <tr><td>2:35–3:05</td><td>4. 말로 고치기 (개선)</td><td>다듬어진 앱</td></tr>
+      <tr><td>3:05–3:20</td><td>5. 공유 + 다음 단계</td><td>공개 링크 + 로드맵</td></tr>
+    </table>
+  </section>
+
+  <!-- 6 · 세션0 한 줄 -->
+  <section class="slide center">
+    <div class="kicker">세션 0 · 15분</div>
+    <h2>내 앱을 한 문장으로</h2>
+    <p class="big">"이 앱은 <span class="accent3">[누구]</span>가 <span class="accent2">[무엇]</span>을 <span class="accent">[어떻게]</span> 배우게 한다."</p>
+    <p class="muted" style="margin-top:24px; font-size:1.25rem;">
+      예) 중1이 교과서 필수 단어를 플래시카드+퀴즈로 외우게 한다.<br>
+      예) 수능 준비생이 빈출 어휘를 예문 빈칸 채우기로 익히게 한다.</p>
+    <p style="margin-top:22px; color:#ffd479;">⚠️ 욕심 금지 — 단어 20개짜리 <b>한 기능</b>이면 충분. 오늘은 "씨앗"을 심는 날.</p>
+  </section>
+
+  <!-- 7 · 세션1 기획서 -->
+  <section class="slide">
+    <div class="kicker">세션 1 · 35분 · AI와 기획서 쓰기</div>
+    <h2>AI에게 시키기 전, 1쪽 기획서부터</h2>
+    <div class="code"><span class="c">너는 영어교육 앱 기획을 돕는 PM이야. 나는 코딩을 모르는 영어 선생님이야.</span>
+내 앱 한 줄: "[세션0 문장]"
+이걸 바탕으로 1쪽 기획서를 표로 만들어줘:
+- 대상 학습자 / 핵심 기능 딱 1개(MVP) / 화면 구성
+- 학습 데이터(단어 몇 개, 어떤 정보) / "성공"의 기준
+질문이 있으면 한 번에 3개씩만 물어봐.</div>
+    <p class="muted" style="margin-top:14px;">👉 선생님의 판단: 이 기능이 <b style="color:#fff">실제 교실에서 쓸모 있나?</b> 복잡하면 "기능 1개로 더 줄여줘".</p>
+  </section>
+
+  <!-- 8 · 세션2 콘텐츠 -->
+  <section class="slide">
+    <div class="kicker">세션 2 · 40분 · AI로 콘텐츠 만들기</div>
+    <h2>앱의 알맹이 = 콘텐츠</h2>
+    <div class="cards">
+      <div class="ic"><h3>📝 단어 20개</h3><p>word_id·word·품사·뜻·CEFR·예문을 <b>CSV</b>로 → Google Sheets에 붙여넣기.</p></div>
+      <div class="ic"><h3>📖 지문 3개</h3><p>그 단어가 들어간 40단어 지문 + 단어-지문 매칭표 (선택).</p></div>
+      <div class="ic"><h3>❓ 퀴즈</h3><p>4지선다 뜻 맞히기 — 오답은 비슷한 수준 단어 뜻으로.</p></div>
+    </div>
+    <p class="muted" style="margin-top:18px;">💾 보관은 <span class="accent3">Google Sheets</span> — 우리의 "데이터베이스". word_id(소문자)가 연결의 열쇠.</p>
+  </section>
+
+  <!-- 9 · 세션2 검증 -->
+  <section class="slide">
+    <div class="kicker">세션 2 · 검증</div>
+    <h2>영어 선생님의 진짜 역할 🎯</h2>
+    <ul>
+      <li>뜻·예문이 <b class="accent">정확한가?</b> (AI는 가끔 틀린 뜻·어색한 예문을 만듭니다)</li>
+      <li>난이도가 대상에 <b class="accent">맞나?</b> 오답 보기가 너무 뻔하지 않나?</li>
+      <li><b style="color:#fff">틀린 건 그 자리에서 고치세요.</b> 이게 AI 못 하는, 선생님만의 가치.</li>
+    </ul>
+    <p class="muted" style="margin-top:18px;">AI는 빠르게 초안을 만들고 — 옳고 그름의 책임은 <b style="color:#fff">선생님</b>에게.</p>
+  </section>
+
+  <!-- 10 · 세션3 왜 index.html -->
+  <section class="slide">
+    <div class="kicker">세션 3 · 50분 · 핵심</div>
+    <h2>왜 "파일 하나(index.html)"인가</h2>
+    <div class="cards">
+      <div class="ic"><h3>🖱️ 더블클릭 실행</h3><p>HTML+CSS+JS+데이터가 한 파일 → 설치·빌드 없이 브라우저에서 바로.</p></div>
+      <div class="ic"><h3>🚀 그대로 배포</h3><p>나중에 그 파일 하나만 올리면 공개 URL 완성 (세션5).</p></div>
+      <div class="ic"><h3>🔁 도구 종속 X</h3><p>Claude·ChatGPT·Gemini 무엇을 쓰든 똑같이 동작.</p></div>
+    </div>
+  </section>
+
+  <!-- 11 · 세션3 ① 프롬프트 -->
+  <section class="slide">
+    <div class="kicker">세션 3 ① · 앱 생성 프롬프트</div>
+    <h2>이렇게 요청하세요</h2>
+    <div class="code"><span class="c">코딩 모르는 영어 선생님을 위해, 영어 단어 학습 앱을</span>
+'하나의 index.html 파일'로 만들어줘. (설치·빌드·라이브러리 없이 더블클릭 실행)
+기능(MVP): 1) 플래시카드(누르면 뜻·예문) 2) 다음 버튼·진도(3/20) 3) 4지선다 퀴즈·점수
+디자인: 크고 깔끔한 글씨, 모바일 OK, 한국어 UI.
+단어 데이터는 아래 목록을 코드 안에 직접 넣어줘. 전체 코드를 한 덩어리로.
+데이터: <span class="h">[세션2의 단어 CSV 붙여넣기]</span></div>
+  </section>
+
+  <!-- 12 · 세션3 ② 코드 생성 -->
+  <section class="slide center">
+    <div class="kicker">세션 3 ② · AI가 코드 생성</div>
+    <h2>AI가 index.html 코드를 만들어 줍니다</h2>
+    <figure class="bigshot"><img src="img/gen_code_index.png" alt="AI가 index.html 코드를 생성하는 화면"></figure>
+    <p class="muted" style="margin-top:14px;">단어 CSV와 함께 요청하면 <span class="accent">전체 코드</span>가 생성됩니다 → <b style="color:#fff">📋 복사</b>.</p>
+  </section>
+
+  <!-- 13 · 세션3 ③ 저장 -->
+  <section class="slide center">
+    <div class="kicker">세션 3 ③ · 메모장에 저장</div>
+    <h2><span class="accent3">index.html</span> 로 저장</h2>
+    <figure class="bigshot"><img src="img/save_as_index.png" alt="다른 이름으로 저장 — index.html, 모든 파일, UTF-8"></figure>
+    <p class="muted" style="margin-top:14px;">메모장에 붙여넣기 → 다른 이름으로 저장 → 이름 <b style="color:#fff">index.html</b> · 파일 형식 <b style="color:#fff">모든 파일</b> · 인코딩 <b style="color:#fff">UTF-8</b>.</p>
+  </section>
+
+  <!-- 14 · 세션3 ④ 더블클릭 -->
+  <section class="slide center">
+    <div class="kicker">세션 3 ④ · 더블클릭으로 열기</div>
+    <h2>저장한 파일을 더블클릭</h2>
+    <figure class="bigshot"><img src="img/open_index.png" alt="index.html 더블클릭"></figure>
+    <p class="muted" style="margin-top:14px;"><span class="accent3">index.html</span> 을 더블클릭하면 별도 설치 없이 <b style="color:#fff">브라우저에서 앱이 열립니다.</b> 눌러보세요!</p>
+  </section>
+
+  <!-- 15 · 세션3 ⑤ 작동 확인 -->
+  <section class="slide center">
+    <div class="kicker">세션 3 ⑤ · 작동 확인</div>
+    <h2>앱이 잘 동작하는지 확인</h2>
+    <figure class="bigshot"><img src="img/demo_flashcard.png" alt="단어 카드 + 퀴즈 앱 작동 화면"></figure>
+    <p class="muted" style="margin-top:14px;">카드 넘기기·뒤집기, <span class="accent">퀴즈 모드</span>로 점수까지 직접 눌러보기.</p>
+  </section>
+
+  <!-- 16 · 세션3 안되면 -->
+  <section class="slide">
+    <div class="kicker">세션 3 · 안 되면? 말로 고치기</div>
+    <h2>코드를 못 읽어도 — 증상을 말로</h2>
+    <div class="step"><div class="num">!</div><p><b>빈 화면</b> — "브라우저에서 빈 화면이야. 콘솔 에러 보는 법 알려주고 코드 고쳐줘."</p></div>
+    <div class="step"><div class="num">!</div><p><b>데이터 일부만</b> — "단어가 5개만 보여. 내가 준 20개 전부 코드에 넣어줘."</p></div>
+    <div class="step"><div class="num">!</div><p><b>한글 깨짐</b> — "파일 맨 위에 &lt;meta charset='utf-8'&gt; 넣어줘."</p></div>
+  </section>
+
+  <!-- 17 · 세션4 개선 -->
+  <section class="slide">
+    <div class="kicker">세션 4 · 30분 · 말로 고치기</div>
+    <h2>한 번에 하나씩, 반복 개선</h2>
+    <ul>
+      <li>"단어 카드 글씨를 더 크게, 색을 부드럽게 해줘."</li>
+      <li>"퀴즈 다 풀면 '잘했어요!' 격려 메시지와 점수를 보여줘."</li>
+      <li>"틀린 단어만 다시 복습하는 버튼을 추가해줘."</li>
+      <li>"단어 옆에 🔊 버튼(브라우저 음성 읽기)을 넣어줘."</li>
+    </ul>
+    <p style="margin-top:16px; color:#ffd479;">⚠️ 함정 — AI가 멀쩡하던 기능을 깨뜨릴 수 있음. <b style="color:#fff">잘 되던 버전 코드를 메모장에 백업</b>(되돌리기용).</p>
+  </section>
+
+  <!-- 18 · 세션5 배포 -->
+  <section class="slide">
+    <div class="kicker">세션 5 · 15분 · 배포(공유)</div>
+    <h2>가장 쉬움 — Netlify Drop</h2>
+    <div class="step"><div class="num">1</div><p>브라우저에서 <span class="accent3">app.netlify.com/drop</span> 접속</p></div>
+    <div class="step"><div class="num">2</div><p>내 <span class="accent3">index.html</span> 을 화면에 <b style="color:#fff">끌어다 놓기</b> (계정 없어도 즉시)</p></div>
+    <div class="step"><div class="num">3</div><p>잠시 뒤 생긴 <span class="accent">공개 URL</span> 복사 → 휴대폰으로 열어 확인 → 동료에게 공유 🎉</p></div>
+  </section>
+
+  <!-- 19 · 세션5 대안 -->
+  <section class="slide">
+    <div class="kicker">세션 5 · 다른 길</div>
+    <h2>대안 & 올인원 빌더</h2>
+    <div class="cards">
+      <div class="ic"><h3>🔗 Vercel · GitHub Pages</h3><p>GitHub 레포에 index.html → 연결하면 공개 URL + 자동 재배포 (Git에 익숙해지면).</p></div>
+      <div class="ic"><h3>⚡ 올인원 앱빌더</h3><p>세션3 프롬프트를 <b>v0.dev · Bolt.new · Lovable · Replit</b> 에 넣으면 생성+배포 한 자리에서.</p></div>
+    </div>
+    <p class="muted" style="margin-top:20px;">핵심은 같습니다 — <b style="color:#fff">index.html 한 파일 → 인터넷의 한 주소.</b> 도구는 취향껏.</p>
+  </section>
+
+  <!-- 20 · 씨앗 다음 단계 -->
+  <section class="slide">
+    <div class="kicker">오늘 만든 것 = "씨앗"</div>
+    <h2>집에서 천천히 키우는 길</h2>
+    <div class="step"><div class="num">1</div><p><b>단어 20 → 200개로</b> — 시트에 줄 추가 → 앱에 다시 붙여넣기.</p></div>
+    <div class="step"><div class="num">2</div><p><b>데이터와 앱 분리</b> — 시트를 "웹에 게시(CSV)" → "이 CSV 주소에서 단어를 불러오게 바꿔줘".</p></div>
+    <div class="step"><div class="num">3</div><p><b>진짜 시스템으로</b> — 단어·지문·문항·스킬을 그래프 DB로 연결.</p></div>
+  </section>
+
+  <!-- 21 · 핵심 5원칙 -->
+  <section class="slide">
+    <div class="kicker">집에 가져갈 것</div>
+    <h2>워크샵 핵심 5원칙</h2>
+    <ul>
+      <li><b class="accent">작게 시작</b> — 단어 20개, 기능 1개. 작동부터 확인.</li>
+      <li><b class="accent">기획서 먼저</b> — AI에게 시키기 전에 1쪽 기획서.</li>
+      <li><b class="accent">선생님이 검증</b> — 뜻·난이도·예문은 당신이 책임.</li>
+      <li><b class="accent">한 번에 하나씩 고치기</b> — + 잘 된 버전 백업.</li>
+      <li><b class="accent">막히면 증상을 말로</b> — 코드를 몰라도 고칠 수 있다.</li>
+    </ul>
+  </section>
+
+  <!-- 22 · 마무리 -->
+  <section class="slide center">
+    <div class="kicker">마무리</div>
+    <p class="quote">여러분은 이미 <span class="accent">무엇을 가르칠지</span> 압니다.<br>
+    이제 그것을 <span class="accent2">말로 설명</span>하면 — 앱이 됩니다.</p>
+    <p class="big" style="margin-top:34px;">자, 첫 줄부터 시작해볼까요? 🌱</p>
+  </section>
+
+</div>
+
+<div class="counter" id="counter">1 / 22</div>
+<div class="hint">← → 또는 Space 로 이동 · F 전체화면</div>
+<div class="nav">
+  <button id="prev">‹</button>
+  <button id="next">›</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  let i = 0;
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length-1, n));
+    slides.forEach((s,k) => s.classList.toggle("active", k===i));
+    document.getElementById("counter").textContent = (i+1) + " / " + slides.length;
+    document.getElementById("pbar").style.width = ((i+1)/slides.length*100) + "%";
+  }
+  document.getElementById("next").onclick = () => show(i+1);
+  document.getElementById("prev").onclick = () => show(i-1);
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { show(i+1); e.preventDefault(); }
+    else if (e.key === "ArrowLeft" || e.key === "PageUp") show(i-1);
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(slides.length-1);
+    else if (e.key.toLowerCase() === "f") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+  show(0);
+</script>
+</body>
+</html>
