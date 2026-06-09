@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>index.html 끌어다 놓기</title>
+<style>
+  body { margin:0; font-family:'Malgun Gothic','Segoe UI',sans-serif; background:#e9eef2; padding:24px; display:flex; justify-content:center; }
+  .browser { width:840px; background:#fff; border-radius:10px; box-shadow:0 18px 50px rgba(0,0,0,.25); overflow:hidden; }
+  .bar { display:flex; align-items:center; gap:12px; background:#f1f3f5; padding:10px 14px; border-bottom:1px solid #e3e6ea; }
+  .dots { display:flex; gap:7px; } .dots span { width:12px; height:12px; border-radius:50%; }
+  .url { flex:1; background:#fff; border:1px solid #d6dadf; border-radius:6px; padding:8px 12px; font-size:13px; color:#555; }
+  .page { padding:32px; text-align:center; position:relative; }
+  .logo { font-weight:800; font-size:22px; color:#0e1e25; } .logo b { color:#00c7b7; }
+  .drop { margin-top:26px; border:3px dashed #00a896; border-radius:16px; background:#d7f5f1; padding:50px 20px; box-shadow:0 0 0 5px rgba(0,199,183,.18); }
+  .dt { font-size:20px; color:#00766c; font-weight:800; }
+  .ds { font-size:13px; color:#5a8; margin-top:6px; }
+  .filecard { position:absolute; right:120px; top:150px; background:#fff; border:1px solid #cfd6dc; border-radius:10px;
+    box-shadow:0 10px 26px rgba(0,0,0,.25); padding:12px 16px; display:flex; align-items:center; gap:10px; transform:rotate(-6deg); }
+  .filecard .ic { font-size:30px; } .filecard .nm { font-size:14px; font-weight:700; color:#222; }
+  .cursor { position:absolute; right:108px; top:196px; font-size:30px; }
+</style></head><body>
+  <div class="browser">
+    <div class="bar"><div class="dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+      <div class="url">🔒 app.netlify.com/drop</div></div>
+    <div class="page">
+      <div class="logo">▲ <b>Netlify</b> Drop</div>
+      <div class="drop"><div class="dt">⬇ 여기에 놓으세요</div>
+        <div class="ds">손을 떼면 바로 업로드됩니다</div>
+      </div>
+      <div class="filecard"><span class="ic">🌐</span><span class="nm">index.html</span></div>
+      <div class="cursor">🖱️</div>
+    </div>
+  </div>
+</body></html>
