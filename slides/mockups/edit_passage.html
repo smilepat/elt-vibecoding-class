@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>지문 앱 수정</title>
+<style>
+  body { margin:0; font-family:'Malgun Gothic','Segoe UI',sans-serif; background:#0d1117;
+    padding:28px; display:flex; justify-content:center; }
+  .panel { width:760px; background:#0d1117; border:1px solid #30363d; border-radius:12px; overflow:hidden; }
+  .head { background:#161b22; padding:9px 14px; color:#8b949e; font-size:13px; border-bottom:1px solid #30363d; }
+  pre { margin:0; padding:18px 20px; font-family:Consolas,monospace; font-size:15px; line-height:1.9; color:#c9d1d9; white-space:pre; }
+  .cm { color:#8b949e; }
+  .kw { color:#ff7b72; }
+  .key { color:#79c0ff; }
+  .str { color:#a5d6ff; }
+  .blank { background:#1f6feb; color:#fff; border-radius:4px; padding:1px 5px; font-weight:700; }
+  .note { color:#ffa657; font-style:italic; }
+  .arrow { color:#7ee787; }
+</style></head><body>
+  <div class="panel">
+    <div class="head">passage.html — 이 부분만 내 지문으로 바꾸면 됩니다</div>
+<pre><span class="cm">/* ⬇⬇ 여기만 바꾸면 새 지문으로 동작합니다 ⬇⬇ */</span>
+<span class="kw">const</span> PASSAGES = [{
+  <span class="key">title</span>: <span class="str">"Global Teamwork"</span>,            <span class="arrow">←</span> <span class="note">지문 제목 (드롭다운에 표시)</span>
+  <span class="key">text</span>:  <span class="str">"Many people <span class="blank">**work**</span> together...</span>
+         <span class="str">you should <span class="blank">**ask**</span> an expert."</span>,   <span class="arrow">←</span> <span class="note">**별표2개** = 빈칸이 될 단어</span>
+  <span class="key">targets</span>: { <span class="key">work</span>:<span class="str">"일하다"</span>, <span class="key">ask</span>:<span class="str">"묻다"</span> }    <span class="arrow">←</span> <span class="note">단어 : 뜻 (힌트·복습용)</span>
+}];
+<span class="cm">/* ⬆⬆ 여기까지가 바꾸면 되는 부분 ⬆⬆ */</span></pre>
+  </div>
+</body></html>

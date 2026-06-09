@@ -235,6 +235,63 @@
     </div>
   </section>
 
+  <!-- 9a · PART 2 실습 ① 프롬프트 작성 -->
+  <section class="slide">
+    <div class="kicker">PART 2 · 지문 앱 실습 ① 프롬프트 작성</div>
+    <h2>이렇게 요청하세요</h2>
+    <div class="code">나는 코딩을 모르는 영어 교사야. 초보도 이해하게,
+HTML 파일 하나로 동작하는 '지문 빈칸 어휘 학습' 앱을 만들어줘.
+- 내가 **별표 두 개**로 굵게 표시한 단어를 빈칸으로
+- 보기(Word Bank)에서 골라 채우고 '채점'하기
+- 원문 보기 / 빈칸 모드 전환
+복잡한 설치 없이 더블클릭 실행, 전체 코드를 한 번에 줘.
+
+지문: [내 수업 지문을 붙여넣고, 가르칠 단어는 **이렇게** 표시]</div>
+  </section>
+
+  <!-- 9b · PART 2 실습 ② AI가 코드 생성 -->
+  <section class="slide center">
+    <div class="kicker">PART 2 · 지문 앱 실습 ② AI가 코드 생성</div>
+    <h2>AI가 HTML 코드를 만들어 줍니다</h2>
+    <figure class="bigshot"><img src="img/gen_code_passage.png" alt="지문 앱 HTML 코드 생성 화면"></figure>
+    <p class="muted" style="margin-top:14px;">지문과 함께 요청하면 <span class="accent">전체 HTML 코드</span>가 생성됩니다 → <b style="color:#fff">📋 복사</b> 버튼으로 전부 복사.</p>
+  </section>
+
+  <!-- 9c · PART 2 실습 ③ 메모장에 저장 -->
+  <section class="slide center">
+    <div class="kicker">PART 2 · 지문 앱 실습 ③ 메모장에 저장</div>
+    <h2>메모장에 <span class="accent3">.html</span> 로 저장</h2>
+    <figure class="bigshot"><img src="img/save_as_passage.png" alt="다른 이름으로 저장 — 모든 파일, passage.html"></figure>
+    <p class="muted" style="margin-top:14px;">메모장에 붙여넣기(Ctrl+V) → 다른 이름으로 저장 →
+      <b style="color:#fff">파일 형식 "모든 파일"</b> 선택 → 이름 끝을 <span class="accent3">passage.html</span> 로.</p>
+  </section>
+
+  <!-- 9d · PART 2 실습 ④ 더블클릭으로 열기 -->
+  <section class="slide center">
+    <div class="kicker">PART 2 · 지문 앱 실습 ④ 더블클릭으로 앱 열기</div>
+    <h2>저장한 파일을 더블클릭</h2>
+    <figure class="bigshot"><img src="img/open_file.png" alt="passage.html 파일 더블클릭"></figure>
+    <p class="muted" style="margin-top:14px;"><span class="accent3">passage.html</span> 을 더블클릭하면 별도 설치 없이 <b style="color:#fff">브라우저에서 앱이 열립니다.</b></p>
+  </section>
+
+  <!-- 9e · PART 2 실습 ⑤ 작동 확인 -->
+  <section class="slide center">
+    <div class="kicker">PART 2 · 지문 앱 실습 ⑤ 작동 확인</div>
+    <h2>앱이 잘 동작하는지 확인</h2>
+    <figure class="bigshot"><img src="img/demo_passage.png" alt="지문 어휘 학습 앱 작동 화면"></figure>
+    <p class="muted" style="margin-top:14px;">빈칸 클릭 → 보기 선택 → <b style="color:#fff">채점</b>, 원문/빈칸 전환, <span class="accent">문맥추론·복습</span> 탭까지 직접 눌러보기.</p>
+  </section>
+
+  <!-- 9f · PART 2 실습 ⑥ 앱 수정하기 -->
+  <section class="slide center">
+    <div class="kicker">PART 2 · 지문 앱 실습 ⑥ 앱 수정하기</div>
+    <h2>내 지문으로 바꾸기</h2>
+    <figure class="bigshot"><img src="img/edit_passage.png" alt="PASSAGES 데이터 수정 방법"></figure>
+    <p class="muted" style="margin-top:12px; max-width:1000px;">지문은 코드 속 <span class="accent3">PASSAGES</span> 에 들어 있어요.
+      <b style="color:#fff">방법①(추천)</b> AI에게 "PASSAGES의 지문을 내 지문으로 바꿔줘, 타겟 단어는 **로 표시하고 targets에 뜻을 적어줘"라고 <b>지문을 주며</b> 요청 → 새 코드 받아 <span class="accent3">passage.html</span> 에 덮어쓰기 저장 →
+      <b style="color:#fff">방법②</b> 메모장에서 <b>title·text·targets</b> 를 직접 교체 → 저장 → 브라우저 새로고침.</p>
+  </section>
+
   <!-- 10 -->
   <section class="slide">
     <div class="kicker">PART 2 · 교육 설계</div>
