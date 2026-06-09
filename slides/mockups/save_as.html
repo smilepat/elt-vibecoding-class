@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<style>
+  body { margin:0; font-family:'Malgun Gothic','Segoe UI',sans-serif; background:#dbe3f0;
+    padding:34px; display:flex; align-items:center; justify-content:center; }
+  .dlg { width:720px; background:#f3f3f3; border:1px solid #b9b9b9; border-radius:8px;
+    box-shadow:0 24px 64px rgba(0,0,0,.4); overflow:hidden; }
+  .title { background:#fafafa; padding:11px 16px; font-size:14px; border-bottom:1px solid #e3e3e3;
+    display:flex; justify-content:space-between; align-items:center; color:#222; }
+  .x { color:#888; }
+  .body { padding:20px 22px 22px; }
+  .path { background:#fff; border:1px solid #cfcfcf; border-radius:4px; padding:9px 12px;
+    font-size:13px; color:#555; margin-bottom:22px; }
+  .row { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .lab { width:84px; font-size:14px; color:#222; text-align:right; }
+  .inp { flex:1; background:#fff; border:1px solid #999; border-radius:4px; padding:9px 12px; font-size:14px; color:#222; }
+  .inp.hl { border:2px solid #ff6b35; box-shadow:0 0 0 3px rgba(255,107,53,.18); font-weight:700; color:#111; }
+  .callout { color:#d6451f; font-weight:700; font-size:13px; white-space:nowrap; }
+  .btns { display:flex; justify-content:flex-end; gap:10px; margin-top:24px; }
+  .btn { padding:9px 26px; border-radius:4px; font-size:14px; border:1px solid #b9b9b9; background:#fafafa; color:#222; }
+  .btn.p { background:#0067c0; color:#fff; border-color:#0067c0; }
+</style></head><body>
+  <div class="dlg">
+    <div class="title"><span>📝 다른 이름으로 저장</span><span class="x">✕</span></div>
+    <div class="body">
+      <div class="path">📁 바탕화면 &nbsp;›&nbsp; 어휘앱</div>
+      <div class="row"><div class="lab">파일 이름:</div><div class="inp hl">vocab.html</div><span class="callout">← 끝을 .html 로</span></div>
+      <div class="row"><div class="lab">파일 형식:</div><div class="inp hl">모든 파일 (*.*)</div><span class="callout">← 반드시 "모든 파일"</span></div>
+      <div class="btns"><div class="btn p">저장(S)</div><div class="btn">취소</div></div>
+    </div>
+  </div>
+</body></html>

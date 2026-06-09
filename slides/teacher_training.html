@@ -70,6 +70,10 @@
   .shot { background: #fff; border-radius: 14px; padding: 8px; box-shadow: 0 14px 34px rgba(0,0,0,0.45); }
   .shot img { max-height: 27vh; max-width: 36vw; border-radius: 8px; display: block; }
   .shot figcaption { color: #cbc3f0; font-size: 0.95rem; margin-top: 8px; text-align: center; }
+  /* 단일 큰 스크린샷 (코드 생성·저장 화면) */
+  .bigshot { background:#fff; border-radius:14px; padding:8px; box-shadow:0 14px 34px rgba(0,0,0,.45);
+    margin-top:14px; align-self:center; }
+  .bigshot img { max-height:50vh; max-width:78vw; border-radius:8px; display:block; }
 
   /* 컨트롤 */
   .nav { position: fixed; bottom: 22px; right: 28px; display: flex; gap: 10px; align-items: center; z-index: 10; }
@@ -177,12 +181,29 @@
 전체 코드를 한 번에 줘.</div>
   </section>
 
-  <!-- 8b · PART 1 실습 완성까지 -->
+  <!-- 8b · PART 1 실습 ③ 코드 생성 화면 -->
+  <section class="slide center">
+    <div class="kicker">PART 1 · 어휘 학습 앱 실습 ③ AI가 코드 생성</div>
+    <h2>AI가 HTML 코드를 만들어 줍니다</h2>
+    <figure class="bigshot"><img src="img/gen_code.png" alt="AI가 HTML 코드를 생성하는 화면"></figure>
+    <p class="muted" style="margin-top:14px;">프롬프트를 넣으면 이렇게 <span class="accent">전체 HTML 코드</span>가 생성됩니다 → <b style="color:#fff">📋 복사</b> 버튼으로 전부 복사.</p>
+  </section>
+
+  <!-- 8c · PART 1 실습 ④ 메모장에 저장 -->
+  <section class="slide center">
+    <div class="kicker">PART 1 · 어휘 학습 앱 실습 ④ 메모장에 저장</div>
+    <h2>메모장에 <span class="accent3">.html</span> 로 저장</h2>
+    <figure class="bigshot"><img src="img/save_as.png" alt="다른 이름으로 저장 대화상자 — 모든 파일, .html"></figure>
+    <p class="muted" style="margin-top:14px;">메모장 열기 → 코드 붙여넣기(Ctrl+V) → 다른 이름으로 저장 →
+      <b style="color:#fff">파일 형식 "모든 파일"</b> 선택 → 이름 끝을 <span class="accent3">vocab.html</span> 로.</p>
+  </section>
+
+  <!-- 8d · PART 1 실습 ⑤ 실행하고 다듬기 -->
   <section class="slide">
-    <div class="kicker">PART 1 · 어휘 학습 앱 실습 ③ 완성까지</div>
-    <h2>붙여넣고 → 다듬고 → 완성</h2>
-    <div class="step"><div class="num">1</div><p><b>데이터 붙여넣기</b> — 초등 어휘 CSV(스포츠·가족·food)를 프롬프트에 함께 입력</p></div>
-    <div class="step"><div class="num">2</div><p><b>직접 실행</b> — 받은 코드를 <span class="accent3">index.html</span> 로 저장 → 브라우저에서 확인</p></div>
+    <div class="kicker">PART 1 · 어휘 학습 앱 실습 ⑤ 실행하고 다듬기</div>
+    <h2>실행 → 다듬고 → 완성</h2>
+    <div class="step"><div class="num">1</div><p><b>직접 실행</b> — 저장한 <span class="accent3">vocab.html</span> 을 더블클릭 → 브라우저에서 확인</p></div>
+    <div class="step"><div class="num">2</div><p><b>데이터 넣기</b> — 초등 어휘 CSV(스포츠·가족·food)를 붙여넣어 단어 교체</p></div>
     <div class="step"><div class="num">3</div><p><b>기능 한 개씩 추가</b> — "퀴즈 추가해줘" → "간격반복 추가해줘"</p></div>
     <div class="step"><div class="num">4</div><p><b>완성 예시와 비교</b> — 아래 데모와 맞춰보며 마무리</p></div>
     <div class="linkrow">
