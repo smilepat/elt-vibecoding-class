@@ -53,17 +53,6 @@
   .code .c { color: #8b949e; } .code .h { color: #7ee787; }
   .quote { font-size: 2rem; line-height: 1.55; font-style: italic; }
 
-  /* 단어목록 표 + CSV 내려받기 */
-  .tablewrap { max-height:54vh; overflow-y:auto; margin-top:6px; border:1px solid rgba(255,255,255,0.15); border-radius:10px; }
-  .wordtbl { margin-top:0; font-size:1.02rem; }
-  .wordtbl th, .wordtbl td { padding:7px 13px; border-bottom:1px solid rgba(255,255,255,0.12); }
-  .wordtbl thead th { position:sticky; top:0; background:#143a34; color:#6ee7c7; z-index:1; }
-  .wordtbl td:first-child { color:#9fc4ba; text-align:center; }
-  .wordtbl td:nth-child(2) { color:#7ee787; font-weight:700; }
-  .dlbtn { align-self:flex-start; margin-top:18px; background:#16a37f; color:#fff; border:none;
-    border-radius:12px; padding:14px 26px; font-size:1.2rem; font-weight:700; cursor:pointer; }
-  .dlbtn:hover { background:#13c08f; }
-
   .bigshot { background:#fff; border-radius:14px; padding:8px; box-shadow:0 14px 34px rgba(0,0,0,.45);
     margin-top:14px; align-self:center; }
   .bigshot img { max-height:50vh; max-width:78vw; border-radius:8px; display:block; }
@@ -179,19 +168,6 @@
       <li><b style="color:#fff">틀린 건 그 자리에서 고치세요.</b> 이게 AI 못 하는, 선생님만의 가치.</li>
     </ul>
     <p class="muted" style="margin-top:18px;">AI는 빠르게 초안을 만들고 — 옳고 그름의 책임은 <b style="color:#fff">선생님</b>에게.</p>
-  </section>
-
-  <!-- 9b · 세션2 단어목록 + CSV 내려받기 -->
-  <section class="slide">
-    <div class="kicker">세션 2 · 단어목록 (예시 20개)</div>
-    <h2>오늘의 단어 20개 <span class="muted" style="font-size:1.05rem;">— 버튼을 누르면 CSV 파일로 저장</span></h2>
-    <div class="tablewrap">
-      <table class="wordtbl">
-        <thead><tr><th>word_id</th><th>word</th><th>pos</th><th>meaning</th><th>category</th><th>CEFR</th><th>example</th></tr></thead>
-        <tbody id="wordTbody"></tbody>
-      </table>
-    </div>
-    <button id="csvBtn" class="dlbtn" type="button">📥 CSV 파일로 내려받기</button>
   </section>
 
   <!-- 10 · 세션3 왜 index.html -->
@@ -407,56 +383,6 @@
       else document.exitFullscreen();
     }
   });
-
-  /* ===== 단어목록 (구글시트 20개) + CSV 내려받기 ===== */
-  const WORDLIST = [
-    {word_id:"1", word:"apple", pos:"noun", meaning:"사과", category:"Food", CEFR:"A1", example:"I eat an apple every day."},
-    {word_id:"2", word:"banana", pos:"noun", meaning:"바나나", category:"Food", CEFR:"A1", example:"The banana is yellow."},
-    {word_id:"3", word:"bread", pos:"noun", meaning:"빵", category:"Food", CEFR:"A1", example:"I like bread for breakfast."},
-    {word_id:"4", word:"milk", pos:"noun", meaning:"우유", category:"Food", CEFR:"A1", example:"She drinks milk every morning."},
-    {word_id:"5", word:"rice", pos:"noun", meaning:"쌀;밥", category:"Food", CEFR:"A1", example:"We eat rice for lunch."},
-    {word_id:"6", word:"egg", pos:"noun", meaning:"달걀", category:"Food", CEFR:"A1", example:"I have an egg for breakfast."},
-    {word_id:"7", word:"juice", pos:"noun", meaning:"주스", category:"Food", CEFR:"A1", example:"Can I have some juice?"},
-    {word_id:"8", word:"cake", pos:"noun", meaning:"케이크", category:"Food", CEFR:"A1", example:"The cake is delicious."},
-    {word_id:"9", word:"water", pos:"noun", meaning:"물", category:"Food", CEFR:"A1", example:"Please drink more water."},
-    {word_id:"10", word:"fish", pos:"noun", meaning:"생선", category:"Food", CEFR:"A1", example:"My father likes fish."},
-    {word_id:"11", word:"school", pos:"noun", meaning:"학교", category:"School", CEFR:"A1", example:"I go to school every day."},
-    {word_id:"12", word:"teacher", pos:"noun", meaning:"선생님", category:"School", CEFR:"A1", example:"My teacher is kind."},
-    {word_id:"13", word:"student", pos:"noun", meaning:"학생", category:"School", CEFR:"A1", example:"The student reads a book."},
-    {word_id:"14", word:"book", pos:"noun", meaning:"책", category:"School", CEFR:"A1", example:"I have a new book."},
-    {word_id:"15", word:"pencil", pos:"noun", meaning:"연필", category:"School", CEFR:"A1", example:"This pencil is sharp."},
-    {word_id:"16", word:"eraser", pos:"noun", meaning:"지우개", category:"School", CEFR:"A1", example:"I need an eraser."},
-    {word_id:"17", word:"desk", pos:"noun", meaning:"책상", category:"School", CEFR:"A1", example:"My desk is clean."},
-    {word_id:"18", word:"chair", pos:"noun", meaning:"의자", category:"School", CEFR:"A1", example:"Please sit on the chair."},
-    {word_id:"19", word:"classroom", pos:"noun", meaning:"교실", category:"School", CEFR:"A1", example:"The classroom is large."},
-    {word_id:"20", word:"homework", pos:"noun", meaning:"숙제", category:"School", CEFR:"A1", example:"I finished my homework."}
-  ];
-  const COLS = ["word_id","word","pos","meaning","category","CEFR","example"];
-
-  (function renderWordList(){
-    const tb = document.getElementById("wordTbody");
-    if (!tb) return;
-    tb.innerHTML = WORDLIST.map(w =>
-      "<tr>" + COLS.map(c => "<td>" + w[c] + "</td>").join("") + "</tr>"
-    ).join("");
-  })();
-
-  function csvField(s){ s = String(s); return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; }
-  function downloadCSV(){
-    const lines = [COLS.join(",")].concat(
-      WORDLIST.map(w => COLS.map(c => csvField(w[c])).join(","))
-    );
-    const csv = "﻿" + lines.join("\r\n");   // BOM: Excel에서 한글 안 깨지게
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "wordlist.csv";
-    document.body.appendChild(a); a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);
-  }
-  const csvBtn = document.getElementById("csvBtn");
-  if (csvBtn) csvBtn.onclick = downloadCSV;
-
   show(0);
 </script>
 </body>
