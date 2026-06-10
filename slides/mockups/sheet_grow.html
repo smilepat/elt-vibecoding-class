@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>단어 200개로</title>
+<style>
+  body { margin:0; font-family:'Malgun Gothic','Segoe UI',sans-serif; background:#f1f3f4; padding:22px; display:flex; justify-content:center; }
+  .sheet { width:780px; background:#fff; border-radius:8px; box-shadow:0 16px 48px rgba(0,0,0,.25); overflow:hidden; }
+  .gbar { background:#0f9d58; height:8px; }
+  .top { padding:10px 16px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between; }
+  .title { font-weight:700; color:#222; font-size:15px; } .title .ic { color:#0f9d58; }
+  .badge { background:#e6f4ea; color:#0b8043; font-weight:700; font-size:13px; padding:5px 12px; border-radius:999px; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; color:#444; }
+  th, td { border:1px solid #e8eaed; padding:6px 10px; text-align:left; }
+  thead th { background:#f8f9fa; color:#777; font-weight:700; }
+  .rownum { background:#f8f9fa; color:#999; text-align:center; width:34px; }
+  tr.new td { background:#e6f4ea; }
+  .callout { color:#0b8043; font-weight:700; font-size:12px; }
+  .dots td { text-align:center; color:#bbb; padding:4px; }
+</style></head><body>
+  <div class="sheet">
+    <div class="gbar"></div>
+    <div class="top"><span class="title"><span class="ic">▦</span> 단어목록 — Google Sheets</span><span class="badge">총 200개 단어</span></div>
+    <table>
+      <thead><tr><th class="rownum">#</th><th>word_id</th><th>word</th><th>뜻</th><th>CEFR</th><th>예문</th></tr></thead>
+      <tbody>
+        <tr><td class="rownum">1</td><td>economy</td><td>economy</td><td>경제</td><td>B1</td><td>The economy is growing.</td></tr>
+        <tr><td class="rownum">2</td><td>improve</td><td>improve</td><td>향상시키다</td><td>A2</td><td>Reading improves vocabulary.</td></tr>
+        <tr><td class="rownum">3</td><td>factor</td><td>factor</td><td>요인</td><td>B1</td><td>Sleep is a key factor.</td></tr>
+        <tr class="dots"><td colspan="6">⋮ &nbsp; (20개 → 계속 줄 추가) &nbsp; ⋮</td></tr>
+        <tr><td class="rownum">198</td><td>preserve</td><td>preserve</td><td>보존하다</td><td>B2</td><td>We must preserve nature.</td></tr>
+        <tr class="new"><td class="rownum">199</td><td>significant</td><td>significant</td><td>중요한</td><td>B2</td><td>A significant change.</td></tr>
+        <tr class="new"><td class="rownum">200</td><td>vary</td><td>vary</td><td>다양하다</td><td>B2</td><td>Prices vary a lot.</td></tr>
+      </tbody>
+    </table>
+    <div style="padding:8px 14px;"><span class="callout">↑ 새로 추가한 단어 (199·200행) — 줄만 계속 늘리면 됩니다</span></div>
+  </div>
+</body></html>

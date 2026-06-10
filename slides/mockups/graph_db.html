@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>그래프 DB</title>
+<style>
+  body { margin:0; font-family:'Malgun Gothic','Segoe UI',sans-serif; background:#ffffff; padding:18px 24px; }
+  .legend { display:flex; gap:18px; justify-content:center; margin-top:6px; font-size:15px; color:#333; }
+  .legend span { display:inline-flex; align-items:center; gap:7px; font-weight:700; }
+  .dot { width:14px; height:14px; border-radius:50%; display:inline-block; }
+  .nlabel { font-size:13px; fill:#eafff7; opacity:.92; }
+  .nname { font-size:17px; font-weight:700; fill:#fff; }
+  .elabel { font-size:13px; fill:#555; font-weight:700; }
+</style></head><body>
+  <svg width="880" height="450" viewBox="0 0 880 450" xmlns="http://www.w3.org/2000/svg">
+    <!-- edges -->
+    <g stroke="#cfd6dc" stroke-width="2.5">
+      <line x1="440" y1="235" x2="440" y2="78"/>
+      <line x1="440" y1="235" x2="700" y2="130"/>
+      <line x1="440" y1="235" x2="700" y2="340"/>
+      <line x1="440" y1="235" x2="440" y2="392"/>
+      <line x1="440" y1="235" x2="180" y2="340"/>
+      <line x1="440" y1="235" x2="180" y2="130"/>
+    </g>
+    <!-- edge labels (halo) -->
+    <g text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="5" class="elabel">
+      <text x="440" y="155">등장</text>
+      <text x="576" y="178">출제</text>
+      <text x="576" y="292">필요 스킬</text>
+      <text x="440" y="320">유의어</text>
+      <text x="304" y="292">필요 스킬</text>
+      <text x="304" y="178">등장</text>
+    </g>
+    <!-- nodes -->
+    <!-- 지문 P001 (top) -->
+    <g text-anchor="middle"><circle cx="440" cy="72" r="46" fill="#1a73e8"/>
+      <text x="440" y="64" class="nlabel">지문</text><text x="440" y="86" class="nname">P001</text></g>
+    <!-- 문항 Q5 (top-right) -->
+    <g text-anchor="middle"><circle cx="700" cy="128" r="46" fill="#f97316"/>
+      <text x="700" y="120" class="nlabel">문항</text><text x="700" y="142" class="nname">Q5</text></g>
+    <!-- 스킬 어휘추론 (bottom-right) -->
+    <g text-anchor="middle"><circle cx="700" cy="342" r="50" fill="#7c5cff"/>
+      <text x="700" y="334" class="nlabel">스킬</text><text x="700" y="356" class="nname">어휘추론</text></g>
+    <!-- 단어 enhance (bottom) -->
+    <g text-anchor="middle"><circle cx="440" cy="398" r="46" fill="#16a37f"/>
+      <text x="440" y="390" class="nlabel">단어</text><text x="440" y="412" class="nname">enhance</text></g>
+    <!-- 스킬 독해 (bottom-left) -->
+    <g text-anchor="middle"><circle cx="180" cy="342" r="46" fill="#7c5cff"/>
+      <text x="180" y="334" class="nlabel">스킬</text><text x="180" y="356" class="nname">독해</text></g>
+    <!-- 지문 P002 (top-left) -->
+    <g text-anchor="middle"><circle cx="180" cy="128" r="46" fill="#1a73e8"/>
+      <text x="180" y="120" class="nlabel">지문</text><text x="180" y="142" class="nname">P002</text></g>
+    <!-- 중심: 단어 improve -->
+    <g text-anchor="middle"><circle cx="440" cy="235" r="58" fill="#0f766e" stroke="#16a37f" stroke-width="4"/>
+      <text x="440" y="226" class="nlabel">단어</text><text x="440" y="250" class="nname" style="font-size:21px">improve</text></g>
+  </svg>
+  <div class="legend">
+    <span><i class="dot" style="background:#16a37f"></i>단어</span>
+    <span><i class="dot" style="background:#1a73e8"></i>지문</span>
+    <span><i class="dot" style="background:#f97316"></i>문항</span>
+    <span><i class="dot" style="background:#7c5cff"></i>스킬</span>
+  </div>
+</body></html>
