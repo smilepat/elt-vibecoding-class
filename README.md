@@ -7,10 +7,11 @@
 
 ## 📚 자료 구성
 
-| 자료 | 대상 | 핵심 컨셉 | 시간 |
+| 자료 (강의안·워크숍 원천 md) | 대상 | 핵심 컨셉 | 시간 |
 |------|------|-----------|------|
-| [영어교사_바이브코딩_워크숍.md](영어교사_바이브코딩_워크숍.md) | 코딩 경험 0 교사 | **내 단어장**으로 플래시카드 앱 만들기 | 4시간 |
-| [지문기반_어휘학습앱_강의안.md](지문기반_어휘학습앱_강의안.md) | 지문 수업 교사 | **수업 지문**을 어휘 학습앱으로 전환 (맥락 기반) | 3시간 |
+| [docs/영어교사_바이브코딩_워크숍.md](docs/영어교사_바이브코딩_워크숍.md) | 코딩 경험 0 교사 | **내 단어장**으로 플래시카드 앱 만들기 | 4시간 |
+| [docs/지문기반_어휘학습앱_강의안.md](docs/지문기반_어휘학습앱_강의안.md) | 지문 수업 교사 | **수업 지문**을 어휘 학습앱으로 전환 (맥락 기반) | 3시간 |
+| [docs/WORKSHOP_생성AI_영어학습앱.md](docs/WORKSHOP_생성AI_영어학습앱.md) | 초보 바이브코더 교사 | 기획서→콘텐츠→index.html 앱→Netlify 배포 (생성AI 전과정) | 3시간 |
 
 ### 두 자료의 차이
 - **워크숍** = 단어 리스트 기반 (decontextualized) → 플래시카드·퀴즈·간격반복
@@ -32,8 +33,8 @@
 | [data/vocab_viewer.html](data/vocab_viewer.html) · [data/elementary_vocab_viewer.html](data/elementary_vocab_viewer.html) | CSV를 브라우저에서 **표로 보는 뷰어** (Chrome 다운로드 방지, 검색·주제 필터) |
 | [demos/01_flashcard.html](demos/01_flashcard.html) | **동작 예제** — 플래시카드+퀴즈+간격반복 (더블클릭 실행) |
 | [demos/02_passage_vocab.html](demos/02_passage_vocab.html) | **동작 예제** — 지문→빈칸·문맥추론·복습 (더블클릭 실행) |
-| [slides/teacher_training.html](slides/teacher_training.html) | **연수용 슬라이드** (단어장+지문 앱, 바이브코딩 루프·6단계 실습, ←→ 이동·F 전체화면) |
-| [slides/new-workshop_생성AI_영어학습앱.html](slides/new-workshop_생성AI_영어학습앱.html) | **3시간 워크샵 슬라이드** 22장 (기획서→콘텐츠→index.html 앱→Netlify 배포, 6세션) |
+| [slides/teacher_training.html](slides/teacher_training.html) | **연수용 슬라이드** 26장 (단어장+지문 앱, 바이브코딩 루프·6단계 실습, ←→ 이동·F 전체화면) |
+| [slides/new-workshop_생성AI_영어학습앱.html](slides/new-workshop_생성AI_영어학습앱.html) | **3시간 워크샵 슬라이드** 29장 (기획서→콘텐츠→index.html 앱→Netlify 배포·씨앗 3항목, 6세션) |
 
 > 두 데모 모두 `<script>` 안의 `여기만 바꾸면` 구역만 교체하면 새 단어장/지문으로 즉시 동작합니다.
 > 자세한 사용·배포는 [demos/README.md](demos/README.md) 참고.
