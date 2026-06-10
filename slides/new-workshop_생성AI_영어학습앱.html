@@ -74,6 +74,15 @@
     border-radius:10px; padding:11px 22px; font-size:1.05rem; font-weight:700; }
   .dllink:hover { background:#13c08f; }
 
+  /* index.html 구조 시각화 2단 */
+  .structwrap { display:flex; gap:36px; align-items:center; margin-top:8px; }
+  .structwrap .imgcol img { max-height:64vh; border-radius:12px; box-shadow:0 14px 34px rgba(0,0,0,.45);
+    display:block; background:#fff; padding:6px; }
+  .structwrap .txtcol { flex:1; }
+  .clrlist { list-style:none; padding:0; margin:0; }
+  .clrlist li { font-size:1.3rem; margin-bottom:14px; display:flex; gap:12px; align-items:flex-start; }
+  .clrlist .sw { width:18px; height:18px; border-radius:5px; flex:0 0 18px; margin-top:6px; }
+
   .nav { position: fixed; bottom: 22px; right: 28px; display: flex; gap: 10px; align-items: center; z-index: 10; }
   .nav button { background: rgba(255,255,255,0.12); border: none; color: #fff; width: 46px; height: 46px;
     border-radius: 50%; font-size: 1.3rem; cursor: pointer; }
@@ -233,6 +242,25 @@
       <div class="ic"><h3>🖱️ 더블클릭 실행</h3><p>HTML+CSS+JS+데이터가 한 파일 → 설치·빌드 없이 브라우저에서 바로.</p></div>
       <div class="ic"><h3>🚀 그대로 배포</h3><p>나중에 그 파일 하나만 올리면 공개 URL 완성 (세션5).</p></div>
       <div class="ic"><h3>🔁 도구 종속 X</h3><p>Claude·ChatGPT·Gemini 무엇을 쓰든 똑같이 동작.</p></div>
+    </div>
+  </section>
+
+  <!-- 10b · index.html 한 파일 = 4가지 요소 시각화 -->
+  <section class="slide">
+    <div class="kicker">세션 3 · 한 파일 = 4가지 요소</div>
+    <h2>index.html 안엔 <span class="accent3">HTML·CSS·JS·데이터</span>가 함께</h2>
+    <div class="structwrap">
+      <div class="imgcol"><img src="img/index_structure.png" alt="index.html 한 파일 안의 4가지 요소(색깔로 보는 구조)"></div>
+      <div class="txtcol">
+        <ul class="clrlist">
+          <li><span class="sw" style="background:#3b82f6;"></span><span><b style="color:#fff">HTML</b> — 화면 구조 (제목·입력칸·버튼·결과)</span></li>
+          <li><span class="sw" style="background:#22c55e;"></span><span><b style="color:#fff">CSS</b> — 글꼴·여백·색 등 디자인</span></li>
+          <li><span class="sw" style="background:#eab308;"></span><span><b style="color:#fff">JavaScript</b> — 버튼 클릭 시 계산·동작</span></li>
+          <li><span class="sw" style="background:#a855f7;"></span><span><b style="color:#fff">데이터</b> — 단어 목록·설정값 등</span></li>
+        </ul>
+        <p class="muted" style="margin-top:8px;">→ 이 4가지가 <b style="color:#fff">한 파일</b>에 다 들어 있어 더블클릭만으로 동작합니다.</p>
+        <a class="dllink" style="background:#1a73e8;" href="index_structure.html" target="_blank" rel="noopener">🔍 색깔로 보는 전체 구조 크게 보기</a>
+      </div>
     </div>
   </section>
 

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>index.html 구조 시각화</title>
+  <style>
+    body {
+      font-family: Arial, "Noto Sans KR", sans-serif;
+      background: #f5f7fb;
+      margin: 0;
+      padding: 32px;
+      color: #222;
+    }
+    .page {
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      padding: 32px;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 30px;
+    }
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .html-tag { background: #e8f1ff; color: #0b57d0; }
+    .css-tag { background: #eaf7ee; color: #137333; }
+    .js-tag { background: #fff4d6; color: #9a6700; }
+    .data-tag { background: #f3e8ff; color: #7e22ce; }
+    .comment-tag { background: #eeeeee; color: #555; }
+
+    .codebox {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 15px;
+      line-height: 1.65;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      background: #1f2937;
+      color: #f9fafb;
+    }
+    .line {
+      display: block;
+      white-space: pre-wrap;
+      padding: 0 18px;
+    }
+    .line:first-child {
+      padding-top: 18px;
+    }
+    .line:last-child {
+      padding-bottom: 18px;
+    }
+    .html { background: rgba(59,130,246,0.18); }
+    .css { background: rgba(34,197,94,0.18); }
+    .js { background: rgba(234,179,8,0.20); }
+    .data { background: rgba(168,85,247,0.20); }
+    .comment {
+      color: #cbd5e1;
+      font-style: italic;
+    }
+    .note {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      border-radius: 16px;
+      padding: 18px;
+      border: 1px solid #e5e7eb;
+      background: #fafafa;
+    }
+    .card h3 {
+      margin-top: 0;
+    }
+    .blue { border-left: 8px solid #3b82f6; }
+    .green { border-left: 8px solid #22c55e; }
+    .yellow { border-left: 8px solid #eab308; }
+    .purple { border-left: 8px solid #a855f7; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>index.html 한 파일 안의 4가지 요소</h1>
+
+    <div class="legend">
+      <span class="tag html-tag">파랑 = HTML 화면 구조</span>
+      <span class="tag css-tag">초록 = CSS 디자인</span>
+      <span class="tag js-tag">노랑 = JavaScript 동작</span>
+      <span class="tag data-tag">보라 = 데이터</span>
+      <span class="tag comment-tag">회색 = 설명 주석</span>
+    </div>
+
+    <div class="codebox">
+<span class="line html">&lt;!DOCTYPE html&gt;</span>
+<span class="line html">&lt;html&gt;</span>
+<span class="line html"></span>
+<span class="line html">&lt;head&gt;</span>
+<span class="line html">    &lt;title&gt;수익 계산기&lt;/title&gt;</span>
+<span class="line html"></span>
+<span class="line css">    &lt;style&gt;</span>
+<span class="line css comment">        /* CSS 영역: 화면을 예쁘게 꾸미는 부분 */</span>
+<span class="line css">        body {</span>
+<span class="line css">            font-family: Arial;</span>
+<span class="line css">            padding: 30px;</span>
+<span class="line css">        }</span>
+<span class="line css"></span>
+<span class="line css">        button {</span>
+<span class="line css">            background: blue;</span>
+<span class="line css">            color: white;</span>
+<span class="line css">            padding: 10px 20px;</span>
+<span class="line css">        }</span>
+<span class="line css">    &lt;/style&gt;</span>
+<span class="line html">&lt;/head&gt;</span>
+<span class="line html"></span>
+<span class="line html">&lt;body&gt;</span>
+<span class="line html"></span>
+<span class="line html comment">    &lt;!-- HTML 영역: 사용자가 보는 화면 구조 --&gt;</span>
+<span class="line html">    &lt;h1&gt;수익 계산기&lt;/h1&gt;</span>
+<span class="line html"></span>
+<span class="line html">    &lt;p&gt;월 매출을 입력하세요&lt;/p&gt;</span>
+<span class="line html">    &lt;input id="sales" placeholder="예: 5000000"&gt;</span>
+<span class="line html"></span>
+<span class="line html">    &lt;p&gt;월 비용을 입력하세요&lt;/p&gt;</span>
+<span class="line html">    &lt;input id="cost" placeholder="예: 3000000"&gt;</span>
+<span class="line html"></span>
+<span class="line html comment">    &lt;!-- 버튼을 누르면 JavaScript 함수 calculate()가 실행됨 --&gt;</span>
+<span class="line html">    &lt;button onclick="calculate()"&gt;계산&lt;/button&gt;</span>
+<span class="line html"></span>
+<span class="line html comment">    &lt;!-- 계산 결과가 여기에 표시됨 --&gt;</span>
+<span class="line html">    &lt;p id="result"&gt;&lt;/p&gt;</span>
+<span class="line html"></span>
+<span class="line js">    &lt;script&gt;</span>
+<span class="line js comment">        // JavaScript 영역: 버튼 클릭 후 실제 계산을 담당</span>
+<span class="line js"></span>
+<span class="line data comment">        // 데이터 영역: 앱 안에 미리 넣어둔 기본 정보</span>
+<span class="line data">        let appName = "수익 계산기";</span>
+<span class="line data"></span>
+<span class="line js">        function calculate() {</span>
+<span class="line js comment">            // 1. HTML 화면에서 사용자가 입력한 매출 값을 가져옴</span>
+<span class="line js">            let sales = Number(document.getElementById("sales").value);</span>
+<span class="line js"></span>
+<span class="line js comment">            // 2. HTML 화면에서 사용자가 입력한 비용 값을 가져옴</span>
+<span class="line js">            let cost = Number(document.getElementById("cost").value);</span>
+<span class="line js"></span>
+<span class="line js comment">            // 3. 이익을 계산함</span>
+<span class="line js">            let profit = sales - cost;</span>
+<span class="line js"></span>
+<span class="line js comment">            // 4. 계산 결과를 다시 HTML 화면에 표시함</span>
+<span class="line js">            document.getElementById("result").innerText =</span>
+<span class="line js">                "이익: " + profit + "원";</span>
+<span class="line js">        }</span>
+<span class="line js">    &lt;/script&gt;</span>
+<span class="line html"></span>
+<span class="line html">&lt;/body&gt;</span>
+<span class="line html">&lt;/html&gt;</span>
+    </div>
+
+    <div class="note">
+      <div class="card blue">
+        <h3>HTML</h3>
+        <p>화면에 보이는 제목, 입력칸, 버튼, 결과 표시 공간을 만듭니다.</p>
+      </div>
+      <div class="card green">
+        <h3>CSS</h3>
+        <p>글꼴, 여백, 버튼 색깔처럼 화면의 모양을 정합니다.</p>
+      </div>
+      <div class="card yellow">
+        <h3>JavaScript</h3>
+        <p>사용자가 버튼을 눌렀을 때 값을 가져오고 계산하고 결과를 보여줍니다.</p>
+      </div>
+      <div class="card purple">
+        <h3>데이터</h3>
+        <p>앱 안에 저장된 단어 목록, 설정값, 샘플 정보 등이 들어갈 수 있습니다.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
