@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>elt-vibecoding-class — 영어교사 바이브코딩</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI','Malgun Gothic',sans-serif; color:#e8f0ee;
+    background:linear-gradient(135deg,#11243f,#14323f 55%,#0f4536); min-height:100vh; padding:48px 20px; }
+  .wrap { max-width:880px; margin:0 auto; }
+  h1 { font-size:2.2rem; color:#fff; }
+  .sub { color:#9fc4ba; margin:10px 0 30px; font-size:1.05rem; }
+  .grid { display:flex; flex-direction:column; gap:16px; }
+  a.card { display:block; text-decoration:none; background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:22px 24px;
+    transition:transform .15s, background .15s; }
+  a.card:hover { background:rgba(255,255,255,.12); transform:translateY(-3px); }
+  a.card h2 { color:#fff; font-size:1.4rem; }
+  a.card p { color:#bcd6cf; margin-top:6px; font-size:1rem; }
+  .tag { display:inline-block; background:#16a37f; color:#fff; font-size:.8rem; font-weight:700;
+    padding:3px 10px; border-radius:999px; margin-left:8px; vertical-align:middle; }
+  .sec { margin-top:28px; color:#6ee7c7; font-size:.95rem; letter-spacing:1px; text-transform:uppercase; }
+  .foot { margin-top:36px; color:#7fa49a; font-size:.85rem; line-height:1.7; }
+  .foot a { color:#7ee787; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🧑‍🏫 영어교사 바이브코딩 — 강의 자료</h1>
+  <p class="sub">코딩 없이 AI에게 말로 시켜 영어 학습앱을 만드는 강의·워크샵 슬라이드와 예제 앱.</p>
+
+  <div class="sec">📑 슬라이드 (←→·Space 이동 · F 전체화면)</div>
+  <div class="grid" style="margin-top:14px;">
+    <a class="card" href="slides/new-workshop_생성AI_영어학습앱.html">
+      <h2>생성형 AI로 영어 학습 앱 만들기 <span class="tag">워크샵 36장</span></h2>
+      <p>3시간 워크샵 — 기획서 → 콘텐츠 → index.html 앱 → Netlify 배포 (세션0~5 + 씨앗)</p></a>
+    <a class="card" href="slides/teacher_training.html">
+      <h2>바이브코딩 연수 <span class="tag">연수 26장</span></h2>
+      <p>단어장 앱(Part1) · 지문 앱(Part2) 6단계 실습 + 재사용 틀</p></a>
+  </div>
+
+  <div class="sec">🧩 예제 앱 (더블클릭 실행)</div>
+  <div class="grid" style="margin-top:14px;">
+    <a class="card" href="apps/word-family/index.html">
+      <h2>🌱 단어가족 탐험기</h2>
+      <p>어휘를 넣으면 굴절어·파생어를 구분해 보여주는 앱</p></a>
+    <a class="card" href="demos/01_flashcard.html">
+      <h2>🃏 어휘 플래시카드</h2>
+      <p>플래시카드 + 4지선다 퀴즈 + 간격반복</p></a>
+    <a class="card" href="demos/02_passage_vocab.html">
+      <h2>📖 지문 기반 어휘 학습</h2>
+      <p>지문 빈칸 채우기 + 문맥추론 + 복습</p></a>
+  </div>
+
+  <p class="foot">
+    GitHub: <a href="https://github.com/smilepat/elt-vibecoding-class">smilepat/elt-vibecoding-class</a><br>
+    강의안 원천 문서는 레포의 <code>docs/</code> 폴더 참고.
+  </p>
+</div>
+</body>
+</html>
