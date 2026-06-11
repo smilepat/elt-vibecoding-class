@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>단어가족 — 파생어 · 굴절어 구분</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Malgun Gothic', sans-serif; background: #f4f7fb; color: #1f2937;
+    min-height: 100vh; padding: 24px 16px; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; color: #0e766e; text-align: center; }
+  .sub { text-align: center; color: #6b7280; margin: 8px 0 18px; font-size: 0.95rem; }
+
+  .explain { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
+  .ex { flex: 1; min-width: 240px; background: #fff; border-radius: 14px; padding: 14px 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .ex.inf { border-left: 6px solid #2563eb; }
+  .ex.der { border-left: 6px solid #16a34a; }
+  .ex h3 { font-size: 1.05rem; margin-bottom: 6px; }
+  .ex.inf h3 { color: #2563eb; } .ex.der h3 { color: #16a34a; }
+  .ex p { font-size: 0.9rem; color: #4b5563; line-height: 1.55; }
+
+  .searchbar { display: flex; gap: 10px; margin-bottom: 12px; }
+  #q { flex: 1; padding: 14px 16px; font-size: 1.1rem; border: 2px solid #cbd5e1; border-radius: 12px; }
+  #q:focus { outline: none; border-color: #0e766e; }
+  #go { padding: 0 22px; border: none; border-radius: 12px; background: #0e766e; color: #fff;
+    font-size: 1.05rem; font-weight: 700; cursor: pointer; }
+  #go:hover { background: #0b8a80; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .chip { background: #e6f4f1; color: #0e766e; border: none; padding: 7px 14px; border-radius: 999px;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+  .chip:hover { background: #c9ebe5; }
+
+  .result { display: none; }
+  .baseCard { background: #0e766e; color: #fff; border-radius: 16px; padding: 18px 20px; margin-bottom: 16px; }
+  .baseCard .word { font-size: 2rem; font-weight: 800; }
+  .baseCard .pos { opacity: 0.85; font-style: italic; margin-left: 8px; font-size: 1rem; }
+  .baseCard .mean { font-size: 1.1rem; margin-top: 4px; }
+  .baseCard .from { margin-top: 10px; font-size: 0.9rem; background: rgba(255,255,255,0.18);
+    display: inline-block; padding: 5px 12px; border-radius: 999px; }
+
+  .cols { display: flex; gap: 16px; flex-wrap: wrap; }
+  .col { flex: 1; min-width: 280px; background: #fff; border-radius: 16px; padding: 18px 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .col h2 { font-size: 1.2rem; margin-bottom: 4px; }
+  .col .desc { font-size: 0.82rem; color: #6b7280; margin-bottom: 12px; }
+  .col.inf h2 { color: #2563eb; } .col.der h2 { color: #16a34a; }
+  .item { padding: 10px 0; border-bottom: 1px solid #eef2f7; }
+  .item:last-child { border-bottom: none; }
+  .item .f { font-size: 1.15rem; font-weight: 700; }
+  .item.inf .f { color: #1e40af; } .item.der .f { color: #15803d; }
+  .item .tag { font-size: 0.8rem; color: #6b7280; margin-left: 8px; }
+  .item .ipos { font-size: 0.85rem; color: #9ca3af; font-style: italic; margin-left: 6px; }
+  .empty { color: #9ca3af; font-size: 0.95rem; padding: 8px 0; }
+
+  .warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 12px;
+    padding: 12px 16px; margin-bottom: 14px; font-size: 0.92rem; }
+  .foot { text-align: center; color: #9ca3af; font-size: 0.82rem; margin-top: 26px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🌱 단어가족 탐험기</h1>
+  <p class="sub">영어 단어를 넣으면 <b>굴절어</b>와 <b>파생어</b>를 구분해 보여줍니다.</p>
+
+  <div class="explain">
+    <div class="ex inf"><h3>🔁 굴절어 (Inflection)</h3><p>품사·뜻은 그대로, <b>문법 형태만</b> 바뀜.<br>복수 -s · 과거 -ed · 진행 -ing · 비교 -er/-est</p></div>
+    <div class="ex der"><h3>🌱 파생어 (Derivation)</h3><p>접두사·접미사로 <b>새 단어</b>를 만듦 (품사·뜻이 바뀜).<br>happy→happiness(명사) · happy→unhappy(반의)</p></div>
+  </div>
+
+  <div class="searchbar">
+    <input id="q" type="text" placeholder="영어 단어를 입력하세요 (예: happy, teach, create)" autocomplete="off">
+    <button id="go">찾기</button>
+  </div>
+  <div class="chips" id="chips"></div>
+
+  <div class="result" id="result"></div>
+
+  <p class="foot">내장 사전 20개 단어가족 기반 · 사전에 없는 단어는 철자 규칙으로 <b>굴절형을 추정</b>합니다.<br>
+  굴절 = 문법 변화(같은 단어) / 파생 = 새 단어 생성(다른 단어). — 교육용 데모</p>
+</div>
+
+<script>
+/* =========================================================
+   단어가족 사전 (base = 기본형)
+   inflection: 굴절형 [{form, tag}]  — 문법 형태 변화
+   derivation: 파생형 [{word, pos, note}] — 접사로 새 단어
+========================================================= */
+const FAMILIES = [
+  { base:"happy", pos:"형용사", mean:"행복한",
+    inflection:[{form:"happier",tag:"비교급 -er"},{form:"happiest",tag:"최상급 -est"}],
+    derivation:[{word:"happily",pos:"부사",note:"-ly"},{word:"happiness",pos:"명사",note:"-ness"},{word:"unhappy",pos:"형용사",note:"un- (반의)"}] },
+  { base:"teach", pos:"동사", mean:"가르치다",
+    inflection:[{form:"teaches",tag:"3인칭 -es"},{form:"taught",tag:"과거 (불규칙)"},{form:"teaching",tag:"진행 -ing"}],
+    derivation:[{word:"teacher",pos:"명사",note:"-er (사람)"},{word:"teachable",pos:"형용사",note:"-able"}] },
+  { base:"create", pos:"동사", mean:"창조하다",
+    inflection:[{form:"creates",tag:"3인칭 -s"},{form:"created",tag:"과거 -d"},{form:"creating",tag:"진행 -ing"}],
+    derivation:[{word:"creation",pos:"명사",note:"-ion"},{word:"creative",pos:"형용사",note:"-ive"},{word:"creativity",pos:"명사",note:"-ity"},{word:"creator",pos:"명사",note:"-or (사람)"},{word:"creatively",pos:"부사",note:"-ly"}] },
+  { base:"nation", pos:"명사", mean:"국가",
+    inflection:[{form:"nations",tag:"복수 -s"}],
+    derivation:[{word:"national",pos:"형용사",note:"-al"},{word:"nationality",pos:"명사",note:"-ity"},{word:"nationalize",pos:"동사",note:"-ize"},{word:"international",pos:"형용사",note:"inter- + -al"},{word:"nationalism",pos:"명사",note:"-ism"}] },
+  { base:"friend", pos:"명사", mean:"친구",
+    inflection:[{form:"friends",tag:"복수 -s"}],
+    derivation:[{word:"friendly",pos:"형용사",note:"-ly"},{word:"friendship",pos:"명사",note:"-ship"},{word:"unfriendly",pos:"형용사",note:"un- (반의)"},{word:"befriend",pos:"동사",note:"be-"}] },
+  { base:"act", pos:"동사", mean:"행동하다",
+    inflection:[{form:"acts",tag:"3인칭 -s"},{form:"acted",tag:"과거 -ed"},{form:"acting",tag:"진행 -ing"}],
+    derivation:[{word:"action",pos:"명사",note:"-ion"},{word:"active",pos:"형용사",note:"-ive"},{word:"actor",pos:"명사",note:"-or (사람)"},{word:"activity",pos:"명사",note:"-ity"},{word:"react",pos:"동사",note:"re-"},{word:"actively",pos:"부사",note:"-ly"}] },
+  { base:"care", pos:"동사·명사", mean:"돌보다 · 돌봄",
+    inflection:[{form:"cares",tag:"3인칭/복수 -s"},{form:"cared",tag:"과거 -d"},{form:"caring",tag:"진행 -ing"}],
+    derivation:[{word:"careful",pos:"형용사",note:"-ful"},{word:"careless",pos:"형용사",note:"-less"},{word:"carefully",pos:"부사",note:"-fully"}] },
+  { base:"beauty", pos:"명사", mean:"아름다움",
+    inflection:[{form:"beauties",tag:"복수 (y→ies)"}],
+    derivation:[{word:"beautiful",pos:"형용사",note:"-ful"},{word:"beautify",pos:"동사",note:"-ify"},{word:"beautifully",pos:"부사",note:"-ly"}] },
+  { base:"agree", pos:"동사", mean:"동의하다",
+    inflection:[{form:"agrees",tag:"3인칭 -s"},{form:"agreed",tag:"과거 -d"},{form:"agreeing",tag:"진행 -ing"}],
+    derivation:[{word:"agreement",pos:"명사",note:"-ment"},{word:"agreeable",pos:"형용사",note:"-able"},{word:"disagree",pos:"동사",note:"dis- (반의)"}] },
+  { base:"use", pos:"동사", mean:"사용하다",
+    inflection:[{form:"uses",tag:"3인칭 -s"},{form:"used",tag:"과거 -d"},{form:"using",tag:"진행 -ing"}],
+    derivation:[{word:"useful",pos:"형용사",note:"-ful"},{word:"useless",pos:"형용사",note:"-less"},{word:"user",pos:"명사",note:"-er (사람)"},{word:"usage",pos:"명사",note:"-age"},{word:"usable",pos:"형용사",note:"-able"}] },
+  { base:"decide", pos:"동사", mean:"결정하다",
+    inflection:[{form:"decides",tag:"3인칭 -s"},{form:"decided",tag:"과거 -d"},{form:"deciding",tag:"진행 -ing"}],
+    derivation:[{word:"decision",pos:"명사",note:"-sion"},{word:"decisive",pos:"형용사",note:"-ive"},{word:"decisively",pos:"부사",note:"-ly"},{word:"indecisive",pos:"형용사",note:"in- (반의)"}] },
+  { base:"educate", pos:"동사", mean:"교육하다",
+    inflection:[{form:"educates",tag:"3인칭 -s"},{form:"educated",tag:"과거 -d"},{form:"educating",tag:"진행 -ing"}],
+    derivation:[{word:"education",pos:"명사",note:"-ion"},{word:"educational",pos:"형용사",note:"-al"},{word:"educator",pos:"명사",note:"-or (사람)"}] },
+  { base:"help", pos:"동사", mean:"돕다",
+    inflection:[{form:"helps",tag:"3인칭 -s"},{form:"helped",tag:"과거 -ed"},{form:"helping",tag:"진행 -ing"}],
+    derivation:[{word:"helper",pos:"명사",note:"-er (사람)"},{word:"helpful",pos:"형용사",note:"-ful"},{word:"helpless",pos:"형용사",note:"-less"},{word:"helpfully",pos:"부사",note:"-ly"}] },
+  { base:"success", pos:"명사", mean:"성공",
+    inflection:[{form:"successes",tag:"복수 -es"}],
+    derivation:[{word:"successful",pos:"형용사",note:"-ful"},{word:"succeed",pos:"동사",note:"동사형"},{word:"successfully",pos:"부사",note:"-ly"},{word:"unsuccessful",pos:"형용사",note:"un- (반의)"}] },
+  { base:"imagine", pos:"동사", mean:"상상하다",
+    inflection:[{form:"imagines",tag:"3인칭 -s"},{form:"imagined",tag:"과거 -d"},{form:"imagining",tag:"진행 -ing"}],
+    derivation:[{word:"imagination",pos:"명사",note:"-ation"},{word:"imaginative",pos:"형용사",note:"-ative"},{word:"imaginary",pos:"형용사",note:"-ary"},{word:"imaginable",pos:"형용사",note:"-able"}] },
+  { base:"nature", pos:"명사", mean:"자연",
+    inflection:[{form:"natures",tag:"복수 -s"}],
+    derivation:[{word:"natural",pos:"형용사",note:"-al"},{word:"naturally",pos:"부사",note:"-ly"},{word:"unnatural",pos:"형용사",note:"un- (반의)"},{word:"naturalize",pos:"동사",note:"-ize"}] },
+  { base:"person", pos:"명사", mean:"사람",
+    inflection:[{form:"persons / people",tag:"복수 (불규칙)"}],
+    derivation:[{word:"personal",pos:"형용사",note:"-al"},{word:"personality",pos:"명사",note:"-ity"},{word:"personalize",pos:"동사",note:"-ize"},{word:"personally",pos:"부사",note:"-ly"}] },
+  { base:"danger", pos:"명사", mean:"위험",
+    inflection:[{form:"dangers",tag:"복수 -s"}],
+    derivation:[{word:"dangerous",pos:"형용사",note:"-ous"},{word:"dangerously",pos:"부사",note:"-ly"},{word:"endanger",pos:"동사",note:"en-"}] },
+  { base:"comfort", pos:"동사·명사", mean:"위로하다 · 편안함",
+    inflection:[{form:"comforts",tag:"3인칭/복수 -s"},{form:"comforted",tag:"과거 -ed"},{form:"comforting",tag:"진행 -ing"}],
+    derivation:[{word:"comfortable",pos:"형용사",note:"-able"},{word:"comfortably",pos:"부사",note:"-ly"},{word:"uncomfortable",pos:"형용사",note:"un- (반의)"}] },
+  { base:"play", pos:"동사", mean:"놀다 · 연주하다",
+    inflection:[{form:"plays",tag:"3인칭 -s"},{form:"played",tag:"과거 -ed"},{form:"playing",tag:"진행 -ing"}],
+    derivation:[{word:"player",pos:"명사",note:"-er (사람)"},{word:"playful",pos:"형용사",note:"-ful"},{word:"playground",pos:"명사",note:"합성어"},{word:"replay",pos:"동사",note:"re-"}] }
+];
+
+/* 모든 형태(기본/굴절/파생)를 → 가족·역할 로 색인 */
+const INDEX = {};
+FAMILIES.forEach(fam => {
+  INDEX[fam.base.toLowerCase()] = { fam, role:"기본형", matched:fam.base };
+  fam.inflection.forEach(i => i.form.split(" / ").forEach(f =>
+    INDEX[f.toLowerCase()] = { fam, role:"굴절형", matched:f }));
+  fam.derivation.forEach(d =>
+    INDEX[d.word.toLowerCase()] = { fam, role:"파생형", matched:d.word });
+});
+
+/* ---- 검색 ---- */
+function search(raw) {
+  const w = (raw || "").trim().toLowerCase();
+  const box = document.getElementById("result");
+  if (!w) { box.style.display = "none"; return; }
+  const hit = INDEX[w];
+  if (hit) renderFamily(hit, w);
+  else renderGuess(w);
+  box.style.display = "block";
+  box.scrollIntoView({ behavior:"smooth", block:"nearest" });
+}
+
+function renderFamily(hit, typed) {
+  const fam = hit.fam;
+  const fromNote = hit.role === "기본형" ? "" :
+    `<div class="from">입력한 <b>${typed}</b> 는 <b>${fam.base}</b> 의 ${hit.role}입니다</div>`;
+  const inf = fam.inflection.length
+    ? fam.inflection.map(i => `<div class="item inf"><span class="f">${i.form}</span><span class="tag">${i.tag}</span></div>`).join("")
+    : `<div class="empty">굴절형이 거의 없는 단어예요.</div>`;
+  const der = fam.derivation.length
+    ? fam.derivation.map(d => `<div class="item der"><span class="f">${d.word}</span><span class="ipos">${d.pos}</span><span class="tag">${d.note}</span></div>`).join("")
+    : `<div class="empty">등록된 파생어가 없어요.</div>`;
+  document.getElementById("result").innerHTML = `
+    <div class="baseCard">
+      <div><span class="word">${fam.base}</span><span class="pos">${fam.pos}</span></div>
+      <div class="mean">${fam.mean}</div>${fromNote}
+    </div>
+    <div class="cols">
+      <div class="col inf"><h2>🔁 굴절어</h2><div class="desc">품사·뜻 그대로, 문법 형태만 변화</div>${inf}</div>
+      <div class="col der"><h2>🌱 파생어</h2><div class="desc">접사로 새 단어 — 품사·뜻이 바뀜</div>${der}</div>
+    </div>`;
+}
+
+/* ---- 사전에 없는 단어: 철자 규칙으로 굴절형 추정 ---- */
+const VOWELS = "aeiou";
+function endsCVC(w){ // 단모음+단자음 (마지막이 자음, 그 앞 모음, 그 앞 자음)
+  if (w.length < 3) return false;
+  const a=w[w.length-3], b=w[w.length-2], c=w[w.length-1];
+  return !VOWELS.includes(a) && VOWELS.includes(b) && !VOWELS.includes(c) && !"wxy".includes(c);
+}
+function addS(w){
+  if (/(s|x|z|ch|sh)$/.test(w)) return w+"es";
+  if (/[^aeiou]y$/.test(w)) return w.slice(0,-1)+"ies";
+  return w+"s";
+}
+function addEd(w){
+  if (w.endsWith("e")) return w+"d";
+  if (/[^aeiou]y$/.test(w)) return w.slice(0,-1)+"ied";
+  if (endsCVC(w)) return w+w[w.length-1]+"ed";
+  return w+"ed";
+}
+function addIng(w){
+  if (w.endsWith("ee")) return w+"ing";
+  if (w.endsWith("e")) return w.slice(0,-1)+"ing";
+  if (endsCVC(w)) return w+w[w.length-1]+"ing";
+  return w+"ing";
+}
+function renderGuess(w) {
+  const forms = [
+    {form:addS(w), tag:"3인칭/복수 -s"},
+    {form:addEd(w), tag:"과거 -ed (동사일 때)"},
+    {form:addIng(w), tag:"진행 -ing (동사일 때)"}
+  ];
+  const inf = forms.map(i => `<div class="item inf"><span class="f">${i.form}</span><span class="tag">${i.tag}</span></div>`).join("");
+  document.getElementById("result").innerHTML = `
+    <div class="warn">⚠️ <b>${w}</b> 는 내장 사전에 없어요. 아래 굴절형은 <b>철자 규칙으로 추정</b>한 것이라 정확하지 않을 수 있어요.
+    파생어는 사전 정보가 필요해 자동 생성하지 않았습니다.</div>
+    <div class="baseCard">
+      <div><span class="word">${w}</span><span class="pos">추정</span></div>
+      <div class="mean">규칙 기반 결과</div>
+    </div>
+    <div class="cols">
+      <div class="col inf"><h2>🔁 굴절어 (추정)</h2><div class="desc">철자 규칙으로 만든 형태</div>${inf}</div>
+      <div class="col der"><h2>🌱 파생어</h2><div class="desc">흔한 접사 — 단어마다 다름</div>
+        <div class="item der"><span class="f">un- / re- / dis-</span><span class="tag">접두사 (반의·반복)</span></div>
+        <div class="item der"><span class="f">-ness / -tion / -ment</span><span class="tag">명사화</span></div>
+        <div class="item der"><span class="f">-ful / -less / -able / -al</span><span class="tag">형용사화</span></div>
+        <div class="item der"><span class="f">-ly</span><span class="tag">부사화</span></div>
+      </div>
+    </div>`;
+}
+
+/* ---- 이벤트 ---- */
+document.getElementById("go").onclick = () => search(document.getElementById("q").value);
+document.getElementById("q").addEventListener("keydown", e => { if (e.key === "Enter") search(e.target.value); });
+
+const EXAMPLES = ["happy","teach","create","nation","friend","use","beauty","educate"];
+const chips = document.getElementById("chips");
+EXAMPLES.forEach(w => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.textContent = w;
+  b.onclick = () => { document.getElementById("q").value = w; search(w); };
+  chips.appendChild(b);
+});
+</script>
+</body>
+</html>
