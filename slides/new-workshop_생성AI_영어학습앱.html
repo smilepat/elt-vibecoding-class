@@ -31,6 +31,11 @@
   .accent3 { color: #79c0ff; font-weight: 700; }
   .muted { color: #9fc4ba; font-size: 1.12rem; }
   .center { align-items: center; text-align: center; }
+  /* 표지(첫 페이지)만 약 130% 확대 */
+  .cover .kicker { font-size: 1.4rem; margin-bottom: 24px; }
+  .cover h1 { font-size: 4.3rem; margin-bottom: 28px; }
+  .cover .big { font-size: 2.5rem; }
+  .cover .muted { font-size: 1.45rem; }
 
   .cards { display: flex; gap: 22px; margin-top: 16px; flex-wrap: wrap; }
   .ic { flex: 1; min-width: 240px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
@@ -97,7 +102,7 @@
 <div class="deck" id="deck">
 
   <!-- 1 · 표지 -->
-  <section class="slide active center">
+  <section class="slide active center cover">
     <div class="kicker">초보 바이브코더용 워크샵</div>
     <h1>생성형 AI로<br><span class="accent">영어 학습 앱</span> 만들기</h1>
     <p class="big">코딩 안 해본 영어 선생님 · <span class="accent2">3시간</span> · 설치 거의 없음</p>
