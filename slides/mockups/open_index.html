@@ -12,6 +12,12 @@
   .file { width:130px; text-align:center; padding:12px 8px; border-radius:8px; }
   .file.sel { background:#e7efff; border:1px solid #9cc0ff; }
   .ic { font-size:48px; line-height:1; }
+  .chrome { display:inline-block; width:48px; height:48px; border-radius:50%; position:relative;
+    background: conic-gradient(from -60deg, #ea4335 0 120deg, #fbbc05 120deg 240deg, #34a853 240deg 360deg);
+    box-shadow:0 1px 3px rgba(0,0,0,.25); }
+  .chrome::before { content:""; position:absolute; inset:13px; border-radius:50%; background:#fff; }
+  .chrome::after { content:""; position:absolute; inset:16px; border-radius:50%; background:#4285f4;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
   .fn { font-size:13px; margin-top:8px; color:#222; word-break:break-all; }
   .tip { margin-top:6px; font-size:12px; color:#0067c0; font-weight:700; }
 </style></head><body>
@@ -19,7 +25,7 @@
     <div class="tb"><span>📁 영어앱</span><span>—&nbsp; ▢ &nbsp;✕</span></div>
     <div class="path">📍 바탕화면 › 영어앱</div>
     <div class="grid">
-      <div class="file sel"><div class="ic">🌐</div><div class="fn">index.html</div><div class="tip">🖱️ 더블클릭 → 브라우저에서 앱 실행</div></div>
+      <div class="file sel"><div class="ic"><span class="chrome"></span></div><div class="fn">index.html</div><div class="tip">🖱️ 더블클릭 → 크롬에서 앱 실행</div></div>
       <div class="file"><div class="ic">📄</div><div class="fn">단어목록.csv</div></div>
     </div>
   </div>
